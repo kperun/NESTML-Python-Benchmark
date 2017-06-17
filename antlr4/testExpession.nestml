@@ -1,0 +1,15 @@
+neuron test_neuron:          
+    state:
+        a = +1
+        b
+        b = 3
+    end
+    
+    computation:
+        a = (~a+-a)**2
+        b = a%b
+        g = a+s
+        c = a + b
+    end
+    
+end
