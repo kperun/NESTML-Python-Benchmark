@@ -5,9 +5,9 @@ This repository contains several implemented prototypes as used to decide which 
 
 The following frontend toolchains have been selected:
 
-- Antlr4 (https://dzone.com/articles/antlr-4-with-python-2-detailed-example)
+- Antlr4 (http://www.antlr.org/)
 
-- Ply (http://www.dabeaz.com/ply/ply.html)
+- Ply (http://www.dabeaz.com/ply/)
 
 - Pyparsing (http://pyparsing.wikispaces.com/)
 
