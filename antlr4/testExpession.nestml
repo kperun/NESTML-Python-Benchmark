@@ -1,14 +1,12 @@
 neuron test_neuron:          
     state:
         a = (~a+-a)**2
-        b
         b = 3mV
     end
     
     computation:
         a = (~a+-a)**2
-        b = a%b
-        g = a+s
+        b = a%d
         c = a + b
     end
     
