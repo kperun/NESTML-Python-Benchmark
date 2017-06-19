@@ -1,7 +1,7 @@
 class ASTComputation():
     decl = {}
 
-    def ASTComputation(self,decl):
+    def __init__(self,decl):
         self.decl = decl
 
     def getDecl(self):

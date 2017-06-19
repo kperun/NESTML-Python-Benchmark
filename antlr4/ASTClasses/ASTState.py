@@ -1,7 +1,7 @@
 class ASTState():
     decl = {}
 
-    def ASTState(self, decl):
+    def __init__(self, decl):
         self.decl = decl
 
     def getDecl(self):

@@ -1,8 +1,8 @@
 neuron test_neuron:          
     state:
-        a = +1
+        a = (~a+-a)**2
         b
-        b = 3
+        b = 3mV
     end
     
     computation:

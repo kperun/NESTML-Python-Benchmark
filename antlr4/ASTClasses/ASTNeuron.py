@@ -1,9 +1,9 @@
 
 class ASTNeuron():
-    name = None
-    body = {}
+    __name = None
+    __body = {}
 
-    def ASTNeuron(self, name, body):
+    def __init__(self, name, body):
         self.name = name
         self.body = body
 

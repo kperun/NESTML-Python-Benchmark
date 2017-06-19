@@ -5,9 +5,20 @@ class ASTStatement:
     """
         Standard Constructor of this class.
     """
-    def ASTStatement(self, decl, expr):
+    def __init__(self, decl, expr):
         self.decl = decl
         self.expr = expr
+
+    """
+        Some factory methods.
+    """
+    @classmethod
+    def makeDeclWithExpression(cls,decl,expr):
+        return cls(decl,expr)
+
+    @classmethod
+    def makeDecl(cls,decl):
+        return cls(decl, None)
 
     """
         Returns the name.

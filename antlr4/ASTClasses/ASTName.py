@@ -1,7 +1,7 @@
 
 class ASTName:
     name = None
-    def ASTName(self, name):
+    def __init__(self, name):
         self.name = name
 
     def getName(self):
