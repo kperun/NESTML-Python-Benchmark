@@ -1,24 +1,16 @@
-# MasterPriv
+# NESTML@Python Benchmark
+
+This repository contains several implemented prototypes as used to decide which frontend, middleware and backend will be seltected for the upcoming project NESTML@Python.
 
 
-Links:
+The following frontend toolchains have been selected:
 
-Antlr4: https://dzone.com/articles/antlr-4-with-python-2-detailed-example
+- Antlr4 (https://dzone.com/articles/antlr-4-with-python-2-detailed-example)
 
-Ply: http://www.dabeaz.com/ply/ply.html
+- Ply (http://www.dabeaz.com/ply/ply.html)
 
-Pyparsing: http://pyparsing.wikispaces.com/
+- Pyparsing (http://pyparsing.wikispaces.com/)
 
---
 
-Execution of Antlr4:
-
-antlr4 -Dlanguage=Python2 GRAMMER-NAME
-
-https://theantlrguy.atlassian.net/wiki/display/ANTLR3/Quick+Starter+on+Parser+Grammars+-+No+Past+Experience+Required
-
-https://github.com/jszheng/py3antlr4book/blob/master/07-LableRule/test_EvalVistor.py
-
---
 
 
