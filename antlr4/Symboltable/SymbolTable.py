@@ -16,7 +16,7 @@ class SimpleSymbolTable:
     def printTable(self):
         if self.symbolLookUpTable is not None:
             for i in self.symbolLookUpTable:
-                print "Key:" + str(i) + " Value: " + str(self.symbolLookUpTable[i])
+                print "Key:" + str(i) + " Value: " + str(self.symbolLookUpTable[i].prettyPrint())
 
 class RedeclarationException(Exception):
     pass

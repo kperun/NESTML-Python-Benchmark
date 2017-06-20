@@ -30,8 +30,7 @@ class TreePrinter:
                 print str(elem.getName().getName()),
                 print " = ",
                 TreePrinter.printTree(elem.getExpr())
-                print ""
             else:
                 print str(elem.getName().getName())
         if isinstance(elem,ASTExpr.ASTExpr):
-            elem.prettyPrint()
+            print elem.prettyPrint()

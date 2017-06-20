@@ -6,3 +6,6 @@ class ASTName:
 
     def getName(self):
         return self.name
+
+    def prettyPrint(self):
+        return self.name

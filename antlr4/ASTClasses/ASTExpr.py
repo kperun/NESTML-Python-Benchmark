@@ -7,7 +7,6 @@ class ASTExpr:
     exponent = None
     lhs = None
     rhs = None
-    decl = None
     term = None
     isLeftBracket = False
     isRightBracket = False
@@ -91,8 +90,6 @@ class ASTExpr:
     def getRhs(self):
         return self.rhs
 
-    def getDecl(self):
-        return self.decl
 
     def getTerm(self):
         return self.term
@@ -100,14 +97,13 @@ class ASTExpr:
     """
         The constructor for this class
     """
-    def __init__(self,expr=None,base=None,exponent=None,lhs=None,rhs=None,term=None, decl = None):
+    def __init__(self,expr=None,base=None,exponent=None,lhs=None,rhs=None,term=None):
         self.expr = expr
         self.base = base
         self.exponent = exponent
         self.lhs = lhs
         self.rhs = rhs
         self.term = term
-        self.decl = decl
 
     @classmethod
     def makeExpr(cls,lhs,rhs,op):
@@ -128,49 +124,40 @@ class ASTExpr:
         return cls(term=term)
 
     @classmethod
-    def makeDecl(cls, decl):
-        return cls(decl = decl)
-
-    @classmethod
     def makePow(cls, base, exponent):
         obj = cls(base=base, exponent=exponent)
         obj.isPow = True
         return obj
 
     def prettyPrint(self):
+        temp = ""
         if self.isExpression():
             if self.hasLeftBracket():
-                print "(",
-            self.getExpr().prettyPrint()
+                temp = temp + "("
+            temp = temp + str(self.getExpr().prettyPrint())
             if self.hasRightBracket():
-                print ")"
+                temp = temp + ")"
         elif self.isTerm():
             if self.getIsUnaryPlus():
-                print "+",
+                temp = temp + "+"
             elif self.getIsUnaryMinus():
-                print "-",
+                temp = temp + "-"
             elif self.getIsUnaryTilde():
-                print "~",
-            self.getTerm().prettyPrint(),
+                temp = temp + "~"
+            temp = temp + str(self.getTerm().prettyPrint())
         elif self.isExponentExpression():
-            print "(",
-            self.getBase().prettyPrint(),
-            print ")^(",
-            self.getExponent().prettyPrint(),
-            print ")",
+            temp = temp + "("
+            temp = temp + str(self.getBase().prettyPrint())
+            temp = temp + ")^("
+            temp = temp + str(self.getExponent().prettyPrint())
+            temp = temp + ")"
         elif self.isCombinedExpression():
-            self.getLhs().prettyPrint(),
+            temp = temp + self.getLhs().prettyPrint()
             if self.getIsPlus():
-                print "+",
+                temp = temp + "+"
             elif self.getIsMinus():
-                print "-",
+                temp = temp + "-"
             else:
-                print "<>",
-            self.getRhs().prettyPrint()
-        elif self.isDecl():
-            if isinstance(self.getDecl(),ASTNumericLiteral.ASTNumericLiteral):
-                print self.getDecl().getValue(),
-                if self.getDecl().hasUnit():
-                    print self.getDecl().getUnit(),
-            if isinstance(self.getDecl(),ASTName.ASTName):
-                print self.getDecl().getName(),
+                temp = temp + "<>"
+            temp = temp + self.getRhs().prettyPrint()
+        return temp

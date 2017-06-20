@@ -37,7 +37,7 @@ def main(argv):
     visitor3 = SymbolTableBuilder()
     symbol_table = visitor3.visit(tree)
     print "--------Symbol Table:-------"
-    print symbol_table.printTable()
+    symbol_table.printTable()
 
     """
     print "-----------------"

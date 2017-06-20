@@ -77,7 +77,7 @@ class ASTBuilder(ParseTreeVisitor):
             obj.isRightBracket = True
             return obj
         elif ctx.term != None:
-            return ASTExpr.ASTExpr.makeDecl(self.visit(ctx.term))
+            return ASTExpr.ASTExpr.makeTerm(self.visit(ctx.term))
 
     def visitAstNumericLiteral(self, ctx):
         return ASTNumericLiteral.ASTNumericLiteral.makeLiteral(ctx.TNumber())
