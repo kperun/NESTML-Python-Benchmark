@@ -4,11 +4,7 @@ from SimpleExpressionGrammerVisitor import SimpleExpressionGrammerVisitor
 
 class SimplePrettyPrinter(ParseTreeVisitor):
     def visitAstNeuron(self, ctx):
-        print "neuron " + str(ctx.name.text) + ":"
-        return self.visitChildren(ctx)
-
-    def visitAstState(self, ctx):
-        print "state:"
+        print "calculator " + str(ctx.name.text) + ":"
         return self.visitChildren(ctx)
 
     def visitAstComputation(self, ctx):
@@ -16,10 +12,14 @@ class SimplePrettyPrinter(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
     def visitAstDeclaration(self, ctx):
-        print ctx.astName().TString()
+        print "declaration:"
+        return self.visitChildren(ctx)
 
-    def visitAstDeclarationWithAssignment(self, ctx):
-        print str(self.visit(ctx.astName())) + " = " + str(self.visit(ctx.astExpr()))
+    def visitAstStatement(self, ctx):
+        if ctx.expr != None:
+            print str(self.visit(ctx.astName())) + " = " + str(self.visit(ctx.astExpr()))
+        else:
+            print str(self.visit(ctx.astName()))
 
 
     def visitAstName(self, ctx):
@@ -47,15 +47,10 @@ class SimplePrettyPrinter(ParseTreeVisitor):
             return str(self.visit(ctx.base)) + "**" + str(self.visit(ctx.exponent))
         elif ctx.leftBracket!=None and ctx.rightBracket!=None:
             return "(" + str(self.visit(ctx.expr)) + ")"
-        elif ctx.decl !=None:
-            return self.visit(ctx.decl)
         elif ctx.term !=None:
             return self.visit(ctx.term)
 
 
     def visitAstNumericLiteral(self, ctx):
-        if ctx.unit != None:
-            return str(ctx.TNumber()) + str(ctx.TString())
-        else:
-            return str(ctx.TNumber())
+        return str(ctx.TNumber())
 

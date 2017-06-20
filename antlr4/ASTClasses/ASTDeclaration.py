@@ -1,4 +1,4 @@
-class ASTState():
+class ASTDeclaration():
     decl = {}
 
     def __init__(self, decl):

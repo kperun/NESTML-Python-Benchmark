@@ -1,24 +1,23 @@
 grammar SimpleExpressionGrammer;
 
-astNeuron : 'neuron' name=TString ':' EOL (astState|astComputation|EOL)* END EOL EOF;
+astNeuron : 'calculator' name=TString ':' EOL (astDeclaration|astComputation|EOL)* END EOL EOF;
 
-astState : 'state' ':' EOL (astStatement)* END EOL;
+astDeclaration : 'declaration' ':' EOL (astStatement)* END EOL;
 
 astComputation : 'computation' ':' EOL (astStatement)* END EOL;
 
-astStatement : decl=astName EOL #astDeclaration | decl=astName '=' expr=astExpr EOL #astDeclarationWithAssignment;
+astStatement : decl=astName ('=' expr=astExpr)? EOL;
 
 astExpr   : leftBracket='(' expr=astExpr rightBracket=')'
        |<assorc=right> base=astExpr lpow='**' exponent=astExpr
        | (unaryPlus='+' | unaryMinus='-' | unaryTilde='~') expr=astExpr
        | lhs=astExpr (times='*' | div='/' | modulo='%') rhs=astExpr
        | lhs=astExpr (plus='+' | minus='-') rhs=astExpr
-       | decl=astName
        | term=astTerm;
 
 astTerm : astNumericLiteral | astName;
 
-astNumericLiteral : value=TNumber (unit=TString)?;
+astNumericLiteral : value=TNumber;
 
 astName : TString;
 

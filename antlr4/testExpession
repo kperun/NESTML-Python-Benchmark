@@ -1,13 +1,13 @@
-neuron test_neuron:          
-    state:
+calculator test_calculation:
+    declaration:
         a = (~a+-a)**2
-        b = 3mV
+        b = 3
     end
-    
+
     computation:
         a = (~a+-a)**2
         b = a%d
         c = a + b
     end
-    
+
 end

@@ -2,7 +2,7 @@ import sys
 
 sys.path.append('../ASTClasses')
 import ASTNeuron
-import ASTState
+import ASTDeclaration
 import ASTComputation
 import ASTStatement
 import ASTName
@@ -15,19 +15,13 @@ from SimpleExpressionGrammerVisitor import SimpleExpressionGrammerVisitor
 class ASTBuilder(ParseTreeVisitor):
     def visitAstNeuron(self, ctx):
         body = list()
-        for child in ctx.astState():
+        for child in ctx.astDeclaration():
             body.append(self.visit(child))
         for child in ctx.astComputation():
             body.append(self.visit(child))
         name = str(ctx.name.text)
         temp = ASTNeuron.ASTNeuron(name, body)
         return temp
-
-    def visitAstState(self, ctx):
-        decl = list()
-        for child in ctx.astStatement():
-            decl.append(self.visit(child))
-        return ASTState.ASTState(decl)
 
     def visitAstComputation(self, ctx):
         decl = list()
@@ -36,13 +30,19 @@ class ASTBuilder(ParseTreeVisitor):
         return ASTComputation.ASTComputation(decl)
 
     def visitAstDeclaration(self, ctx):
-        return ASTStatement.ASTStatement.makeDecl(self.visit(ctx.astName()))
-
-    def visitAstDeclarationWithAssignment(self, ctx):
-        return ASTStatement.ASTStatement.makeDeclWithExpression((self.visit(ctx.astName())), self.visit(ctx.astExpr()))
+        decl = list()
+        for child in ctx.astStatement():
+            decl.append(self.visit(child))
+        return ASTDeclaration.ASTDeclaration(decl)
 
     def visitAstName(self, ctx):
         return ASTName.ASTName(ctx.TString())
+
+    def visitAstStatement(self, ctx):
+        if ctx.expr is None:
+            return ASTStatement.ASTStatement(self.visit(ctx.decl),None)
+        else:
+            return ASTStatement.ASTStatement(self.visit(ctx.decl), self.visit(ctx.expr))
 
     def visitAstExpr(self, ctx):
         if ctx.unaryPlus != None:
@@ -76,13 +76,8 @@ class ASTBuilder(ParseTreeVisitor):
             obj.isLeftBracket = True
             obj.isRightBracket = True
             return obj
-        elif ctx.decl != None:
-            return ASTExpr.ASTExpr.makeDecl(self.visit(ctx.decl))
         elif ctx.term != None:
             return ASTExpr.ASTExpr.makeDecl(self.visit(ctx.term))
 
     def visitAstNumericLiteral(self, ctx):
-        if ctx.unit != None:
-            return ASTNumericLiteral.ASTNumericLiteral.makeLiteralWithUnit(ctx.TNumber(),ctx.TString())
-        else:
-            return ASTNumericLiteral.ASTNumericLiteral.makeLiteral(ctx.TNumber())
+        return ASTNumericLiteral.ASTNumericLiteral.makeLiteral(ctx.TNumber())

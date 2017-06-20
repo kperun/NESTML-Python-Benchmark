@@ -18,24 +18,33 @@ from SymbolTable import *
 
 
 def main(argv):
-    input = FileStream("testExpession.nestml")
+    input = FileStream("testExpession")
     lexer = SimpleExpressionGrammerLexer(input)
     stream = CommonTokenStream(lexer)
     parser = SimpleExpressionGrammerParser(stream)
     tree = parser.astNeuron()
+    print "---------Print parse tree:---------"
+    # first print the tree
     visitor = SimplePrettyPrinter()
-    visitor2 = ASTBuilder()
-    visitor3 = SymbolTableBuilder()
     visitor.visit(tree)
-    neuron  = visitor2.visit(tree)
+    # now create an AST from the given tree
+    print "---------Print AST:---------"
+    visitor2 = ASTBuilder()
+    calculator = visitor2.visit(tree)
+    TreePrinter.printTree(calculator) # print the ast
+    print "----------------------------"
+    print "Creating Symbol table ..."
+    visitor3 = SymbolTableBuilder()
     symbol_table = visitor3.visit(tree)
-    print "-----------------"
-    TreePrinter.printTree(neuron)
+    print "--------Symbol Table:-------"
+    print symbol_table.printTable()
+
+    """
     print "-----------------"
     symbol_table.printTable()
     print "-----------------"
     OnlyDeclaredCoCo.checkTree(neuron, symbol_table)
-
+    """
 
 if __name__ == '__main__':
     main(sys.argv)
