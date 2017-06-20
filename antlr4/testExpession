@@ -2,6 +2,7 @@ calculator test_calculation:
     declaration:
         a = (~a+-a)**2
         b = 3
+        c
     end
 
     computation:

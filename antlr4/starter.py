@@ -38,13 +38,10 @@ def main(argv):
     symbol_table = visitor3.visit(tree)
     print "--------Symbol Table:-------"
     symbol_table.printTable()
+    print "----------------------------"
+    print "Check CoCos...."
+    OnlyDeclaredCoCo.checkTree(calculator, symbol_table)
 
-    """
-    print "-----------------"
-    symbol_table.printTable()
-    print "-----------------"
-    OnlyDeclaredCoCo.checkTree(neuron, symbol_table)
-    """
 
 if __name__ == '__main__':
     main(sys.argv)

@@ -6,7 +6,7 @@ astDeclaration : 'declaration' ':' EOL (astStatement)* END EOL;
 
 astComputation : 'computation' ':' EOL (astStatement)* END EOL;
 
-astStatement : decl=astName ('=' expr=astExpr)? EOL;
+astStatement : decl=astName '=' expr=astExpr EOL;
 
 astExpr   : leftBracket='(' expr=astExpr rightBracket=')'
        |<assorc=right> base=astExpr lpow='**' exponent=astExpr

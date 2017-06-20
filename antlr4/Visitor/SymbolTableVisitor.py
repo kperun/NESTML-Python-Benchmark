@@ -20,5 +20,6 @@ class SymbolTableBuilder(ParseTreeVisitor):
         expression_visitor = ASTBuilderVisitor.ASTBuilder()
         for child in ctx.astDeclaration():
             for child in child.astStatement():
-                table.insert(str(child.decl.TString()),expression_visitor.visit(child.expr))
+                table.insert(str(child.decl.TString()),
+                             expression_visitor.visit(child.expr))
         return table

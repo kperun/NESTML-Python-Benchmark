@@ -39,10 +39,7 @@ class ASTBuilder(ParseTreeVisitor):
         return ASTName.ASTName(ctx.TString())
 
     def visitAstStatement(self, ctx):
-        if ctx.expr is None:
-            return ASTStatement.ASTStatement(self.visit(ctx.decl),None)
-        else:
-            return ASTStatement.ASTStatement(self.visit(ctx.decl), self.visit(ctx.expr))
+        return ASTStatement.ASTStatement(self.visit(ctx.decl), self.visit(ctx.expr))
 
     def visitAstExpr(self, ctx):
         if ctx.unaryPlus != None:
