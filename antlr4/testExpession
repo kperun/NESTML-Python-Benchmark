@@ -1,14 +1,14 @@
 calculator test_calculation:
     declaration:
-        a = (~a+-a)**2
-        b = 3
-        c
+        a = 10**2
+        b = 22
+        c = 33
     end
 
     computation:
-        a = (~a+-a)**2
-        b = a%d
-        c = a + b
+        a = a*2
+        b = b + a/10
+        c = a + b +c
     end
 
 end

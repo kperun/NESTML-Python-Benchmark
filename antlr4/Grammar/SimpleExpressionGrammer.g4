@@ -10,7 +10,7 @@ astStatement : decl=astName '=' expr=astExpr EOL;
 
 astExpr   : leftBracket='(' expr=astExpr rightBracket=')'
        |<assorc=right> base=astExpr lpow='**' exponent=astExpr
-       | (unaryPlus='+' | unaryMinus='-' | unaryTilde='~') expr=astExpr
+       | (unaryPlus='+' | unaryMinus='-') expr=astExpr
        | lhs=astExpr (times='*' | div='/' | modulo='%') rhs=astExpr
        | lhs=astExpr (plus='+' | minus='-') rhs=astExpr
        | term=astTerm;

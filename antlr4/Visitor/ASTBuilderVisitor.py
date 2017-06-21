@@ -50,10 +50,6 @@ class ASTBuilder(ParseTreeVisitor):
             obj = ASTExpr.ASTExpr.makeTerm(self.visit(ctx.expr))
             obj.isUnaryMinus = True
             return obj
-        elif ctx.unaryTilde != None:
-            obj = ASTExpr.ASTExpr.makeTerm(self.visit(ctx.expr))
-            obj.isUnaryTilde = True
-            return obj
         elif ctx.lhs != None and ctx.rhs != None:
             if ctx.times != None:
                 return ASTExpr.ASTExpr.makeExpr(self.visit(ctx.lhs), self.visit(ctx.rhs), "*")

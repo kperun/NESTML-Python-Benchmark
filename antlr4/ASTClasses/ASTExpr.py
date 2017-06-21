@@ -35,9 +35,6 @@ class ASTExpr:
     def getIsUnaryMinus(self):
         return self.isUnaryMinus
 
-    def getIsUnaryTilde(self):
-        return self.isUnaryTilde
-
     def getIsTimes(self):
         return self.isTimes
 
@@ -142,13 +139,11 @@ class ASTExpr:
                 temp = temp + "+"
             elif self.getIsUnaryMinus():
                 temp = temp + "-"
-            elif self.getIsUnaryTilde():
-                temp = temp + "~"
             temp = temp + str(self.getTerm().prettyPrint())
         elif self.isExponentExpression():
-            temp = temp + "("
+            temp = temp + "pow("
             temp = temp + str(self.getBase().prettyPrint())
-            temp = temp + ")^("
+            temp = temp + ","
             temp = temp + str(self.getExponent().prettyPrint())
             temp = temp + ")"
         elif self.isCombinedExpression():
@@ -157,7 +152,31 @@ class ASTExpr:
                 temp = temp + "+"
             elif self.getIsMinus():
                 temp = temp + "-"
-            else:
-                temp = temp + "<>"
+            elif self.getIsTimes():
+                temp = temp + "*"
+            elif self.getIsDiv():
+                temp = temp + "/"
+            elif self.getIsModulo():
+                temp = temp + "%"
             temp = temp + self.getRhs().prettyPrint()
         return temp
+
+    def getVariables(self):
+        temp = []
+        if self.term is not None and isinstance(self.term,ASTName.ASTName):
+            temp.append(self.term.getName())
+        if self.expr is not None:
+            temp.append(self.expr.getVariables())
+        if self.base is not None:
+            temp.append(self.base.getVariables())
+        if self.exponent is not None:
+            temp.append(self.exponent.getVariables())
+        if self.lhs is not None:
+            temp.append(self.lhs.getVariables())
+        if self.rhs is not None:
+            temp.append(self.rhs.getVariables())
+        if len(temp)>1:
+            ret = [item for sublist in temp for item in sublist]
+        else:
+            ret = temp
+        return ret

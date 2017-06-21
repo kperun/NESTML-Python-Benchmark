@@ -30,8 +30,6 @@ class SimplePrettyPrinter(ParseTreeVisitor):
             return "+" + str(self.visit(ctx.expr))
         elif ctx.unaryMinus !=None:
             return "-" + str(self.visit(ctx.expr))
-        elif ctx.unaryTilde !=None:
-            return "~" + str(self.visit(ctx.expr))
         elif ctx.lhs !=None and ctx.rhs !=None:
             if ctx.times !=None:
                 return str(self.visit(ctx.lhs)) + "*" + str(self.visit(ctx.rhs))
