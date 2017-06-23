@@ -18,5 +18,9 @@ The following backend toolchains have been selected for testing:
 
 - Jinja (http://jinja.pocoo.org/)
 
+- Tenjin (http://www.kuwata-lab.com/tenjin)
+
+The following backend will not be used due to it limited support in Python 2.7:
+
 - Tender (https://github.com/transceptor-technology/trender)
 

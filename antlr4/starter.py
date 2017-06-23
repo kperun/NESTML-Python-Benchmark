@@ -19,6 +19,9 @@ from Cheetah.Template import Template
 import os
 from jinja2 import Template as jinTemplate
 from jinja2 import Environment,FileSystemLoader
+import tenjin
+from tenjin.helpers import *
+
 
 
 def main(argv):
@@ -62,6 +65,14 @@ def main(argv):
     with open("jinja_code.cpp", "w+") as f:
         f.write(str(output))
     print "done"
+    # now print it by means of tenjin
+    print "Start printing with Tenjin...",
+    engine = tenjin.Engine(path=['Backend/Tenjin/'])
+    output = engine.render('template.pyhtml',nameSpace)
+    with open("tenjin_code.cpp", "w+") as f:
+        f.write(str(output))
+    print "done"
+
 
 
 if __name__ == '__main__':
