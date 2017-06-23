@@ -17,6 +17,8 @@ from OnlyDeclared import *
 from SymbolTable import *
 from Cheetah.Template import Template
 import os
+from jinja2 import Template as jinTemplate
+from jinja2 import Environment,FileSystemLoader
 
 
 def main(argv):
@@ -42,14 +44,25 @@ def main(argv):
     print "--------Symbol Table:-------"
     symbol_table.printTable()
     print "----------------------------"
-    print "Check CoCos...."
+    print "Check CoCos....",
     OnlyDeclaredCoCo.checkTree(calculator, symbol_table)
-    print "Start printing with Cheetah..."
+    print "done"
+    print "Start printing with Cheetah...",
     nameSpace = {'name':calculator.getName(),'decl':calculator.getDeclarations(),'comp':calculator.getComputations()}
-    t = Template(file='Backend/Cheetah/template.tmpl',searchList=nameSpace)
+    tC = Template(file='Backend/Cheetah/template.tmpl',searchList=nameSpace)
     # open a file and write the generated code
     with open("cheetah_code.cpp", "w+") as f:
-        f.write(str(t))
+        f.write(str(tC))
+    print "done"
+    # now print it by means of jinja
+    print "Start printing with Jinja...",
+    env = Environment(loader=FileSystemLoader('Backend/Jinja'))
+    tJ = env.get_template('template.html')
+    output = tJ.render(nameSpace)
+    with open("jinja_code.cpp", "w+") as f:
+        f.write(str(output))
+    print "done"
+
 
 if __name__ == '__main__':
     main(sys.argv)
