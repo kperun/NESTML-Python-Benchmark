@@ -1,0 +1,66 @@
+Created by PLY version 3.10 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    LPARAN
+    END
+    DIVIDE
+    RPARAN
+    POW
+    TIMES
+    TSTRING
+    COLON
+    PLUS
+    TNUMBER
+    MODULO
+    MINUS
+
+Grammar
+
+Rule 0     S' -> astNeuron
+Rule 1     astNeuron -> CALCULATOR
+
+Terminals, with rules where they appear
+
+CALCULATOR           : 1
+COLON                : 
+DIVIDE               : 
+END                  : 
+LPARAN               : 
+MINUS                : 
+MODULO               : 
+PLUS                 : 
+POW                  : 
+RPARAN               : 
+TIMES                : 
+TNUMBER              : 
+TSTRING              : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+astNeuron            : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . astNeuron
+    (1) astNeuron -> . CALCULATOR
+
+    CALCULATOR      shift and go to state 2
+
+    astNeuron                      shift and go to state 1
+
+state 1
+
+    (0) S' -> astNeuron .
+
+
+
+state 2
+
+    (1) astNeuron -> CALCULATOR .
+
+    $end            reduce using rule 1 (astNeuron -> CALCULATOR .)
+

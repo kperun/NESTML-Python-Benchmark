@@ -1,14 +1,2 @@
-calculator test_calculation:
-    declaration:
-        a = 10**2
-        b = 22
-        c = 33
-    end
-
-    computation:
-        a = a*2
-        b = b + a/10
-        c = a + b +c
-    end
-
+calculator test_calculator:
 end

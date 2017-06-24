@@ -6,26 +6,22 @@ sys.path.append('ASTClasses')
 sys.path.append('Symboltable/SymbolTable')
 sys.path.append('CoCos')
 sys.path.append('Backend')
-
-from ASTBuilderVisitor import *
-from SimpleExpressionGrammerLexer import SimpleExpressionGrammerLexer
-from PrettyPrinterVisitor import *
-from SimpleExpressionGrammerParser import SimpleExpressionGrammerParser
-from SymbolTableVisitor import *
-from TreePrinter import *
-from OnlyDeclared import *
-from SymbolTable import *
-from Cheetah.Template import Template
-import os
-from jinja2 import Template as jinTemplate
-from jinja2 import Environment,FileSystemLoader
-import tenjin
-from tenjin.helpers import *
-
-
+import ply.lex as lex
+import ply.yacc as yacc
+from SimpleExpressionGrammar import *
 
 def main(argv):
     input = FileStream("testExpession")
+    # First build the lexer
+    lexer = lex.lex()
+    yacc.yacc()
+    lexer.input(str(input))
+    #print str(input)
+    for tok in lexer:
+        print(tok)
+
+    #yacc.parse(str(input))
+    """
     lexer = SimpleExpressionGrammerLexer(input)
     stream = CommonTokenStream(lexer)
     parser = SimpleExpressionGrammerParser(stream)
@@ -72,7 +68,7 @@ def main(argv):
     with open("tenjin_code.cpp", "w+") as f:
         f.write(str(output))
     print "done"
-
+    """
 
 
 if __name__ == '__main__':
