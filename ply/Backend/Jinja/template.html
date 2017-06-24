@@ -1,0 +1,21 @@
+#include "iostream"
+#include <math.h>
+
+
+int main(){
+   std::cout << "Starting computation {{ name }}" << std::endl;
+   std::cout << "Declare variables..." << std::endl;
+   {% for i in decl %}{% for j in i.getDecl() %}
+   std::cout << "Declare {{ j.getName().prettyPrint() }} with {{ j.getExpr().prettyPrint() }}" << std::endl;
+   int {{ j.getName().prettyPrint() }} = (int){{ j.getExpr().prettyPrint() }};
+   {% endfor %}{% endfor %}
+   std::cout << "Start computation..." << std::endl;
+   {% for i in comp %}{% for j in i.getDecl() %}
+   std::cout << "Compute {{ j.getName().prettyPrint() }}={{ j.getExpr().prettyPrint() }}" << std::endl;
+   {{ j.getName().prettyPrint() }} = {{ j.getExpr().prettyPrint() }};{% endfor %}{% endfor %}
+   std::cout << "The results are:" << std::endl;
+   {% for i in comp %}{% for j in i.getDecl() %}
+   std::cout << "{{ j.getName().prettyPrint() }}=" << {{ j.getName().prettyPrint() }} << std::endl;
+   {% endfor %}{% endfor %}
+   return 0;
+}

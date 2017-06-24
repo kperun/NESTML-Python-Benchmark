@@ -8,7 +8,7 @@ The following frontend toolchains have been selected for testing:
 
 - Antlr4 (http://www.antlr.org/)
 
-- Ply (http://www.dabeaz.com/ply/)
+- Ply (http://www.dabeaz.com/ply/ , https://github.com/dabeaz/ply)
 
 - Pyparsing (http://pyparsing.wikispaces.com/)
 

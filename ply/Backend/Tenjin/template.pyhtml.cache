@@ -1,0 +1,34 @@
+timestamp: 1498213437.92
+
+_extend=_buf.extend;_to_str=to_str;_escape=escape; _extend(('''#include "iostream"
+#include <math.h>
+
+
+int main(){
+   std::cout << "Starting computation ''', _escape(_to_str(name)), '''" << std::endl;
+
+   std::cout << "Declare variables..." << std::endl;\n''', ));
+for i in decl:
+    for j in i.getDecl():
+        _extend(('''   std::cout << "Declare ''', _escape(_to_str(j.getName().prettyPrint())), ''' with ''', _escape(_to_str(j.getExpr().prettyPrint())), '''" << std::endl;
+   int ''', _escape(_to_str(j.getName().prettyPrint())), ''' = (int)''', _escape(_to_str(j.getExpr().prettyPrint())), ''';\n''', ));
+    #endfor
+#endfor
+_extend(('''
+   std::cout << "Start computation..." << std::endl;\n''', ));
+for i in comp:
+    for j in i.getDecl():
+        _extend(('''   std::cout << "Compute ''', _escape(_to_str(j.getName().prettyPrint())), '''=''', _escape(_to_str(j.getExpr().prettyPrint())), '''" << std::endl;
+   ''', _escape(_to_str(j.getName().prettyPrint())), ''' = ''', _escape(_to_str(j.getExpr().prettyPrint())), ''';\n''', ));
+    #endfor
+#endfor
+_extend(('''   std::cout << "The results are:" << std::endl;\n''', ));
+for i in comp:
+    for j in i.getDecl():
+        _extend(('''   std::cout << "''', _escape(_to_str(j.getName().prettyPrint())), '''=" << ''', _escape(_to_str(j.getName().prettyPrint())), ''' << std::endl;\n''', ));
+    #endfor
+#endfor
+_extend(('''
+
+   return 0;
+}''', ));
