@@ -1,2 +1,4 @@
-calculator test_calculator:
+calculator test:
+declaration:
+hi = (-1+1)
 end

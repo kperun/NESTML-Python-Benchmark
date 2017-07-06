@@ -5,9 +5,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftTIMESDIVIDETNUMBER END CALCULATOR TSTRING PLUS MINUS TIMES DIVIDE MODULO POW LPARAN RPARAN COLONastNeuron : CALCULATOR'
+_lr_signature = 'astCalculatorleftPLUSMINUSleftTIMESDIVIDENUMBER END CALCULATOR STRING PLUS MINUS TIMES DIVIDE MODULO POW LPAREN RPAREN COLON NEWLINE DECLARATION COMPUTATION EQastCalculator : CALCULATOR STRING COLON astBody END\n    astBody : DECLARATION COLON astDeclaration \n            | COMPUTATION COLON astComputation \n    \n    astDeclaration : STRING \n                   | STRING EQ astExpression\n    astComputation : STRING EQ astExpression\n    astExpression : NUMBER\n                  | STRING\n                  | LPAREN astExpression RPAREN\n                  | astExpression POW astExpression\n                  | PLUS astExpression\n                  | MINUS astExpression\n                  | astExpression TIMES astExpression\n                  | astExpression DIVIDE astExpression\n                  | astExpression PLUS astExpression\n                  | astExpression MINUS astExpression\n                  | astExpression MODULO astExpression\n                  | \n    '
     
-_lr_action_items = {'CALCULATOR':([0,],[2,]),'$end':([1,2,],[0,-1,]),}
+_lr_action_items = {'PLUS':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[20,20,-8,28,-7,20,20,20,28,20,20,20,20,20,20,-11,28,-12,28,-14,28,-13,-15,-16,-9,]),'DIVIDE':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[-18,-18,-8,25,-7,-18,-18,-18,25,-18,-18,-18,-18,-18,-18,25,25,25,25,-14,25,-13,25,25,-9,]),'END':([7,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,32,33,34,35,36,37,38,39,],[10,-3,-4,-2,-18,-18,-8,-6,-7,-18,-18,-5,-18,-18,-18,-18,-18,-18,-11,-12,-17,-14,-10,-13,-15,-16,-9,]),'STRING':([2,8,9,15,16,20,21,22,24,25,26,27,28,29,],[3,11,13,17,17,17,17,17,17,17,17,17,17,17,]),'POW':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[-18,-18,-8,26,-7,-18,-18,-18,26,-18,-18,-18,-18,-18,-18,-11,26,-12,26,-14,26,-13,-15,-16,-9,]),'CALCULATOR':([0,],[2,]),'NUMBER':([15,16,20,21,22,24,25,26,27,28,29,],[19,19,19,19,19,19,19,19,19,19,19,]),'RPAREN':([17,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[-8,-7,-18,-18,-18,-18,-18,-18,-18,-18,-18,-11,39,-12,-17,-14,-10,-13,-15,-16,-9,]),'TIMES':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[-18,-18,-8,27,-7,-18,-18,-18,27,-18,-18,-18,-18,-18,-18,27,27,27,27,-14,27,-13,27,27,-9,]),'COLON':([3,5,6,],[4,8,9,]),'COMPUTATION':([4,],[5,]),'DECLARATION':([4,],[6,]),'LPAREN':([15,16,20,21,22,24,25,26,27,28,29,],[21,21,21,21,21,21,21,21,21,21,21,]),'MODULO':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[-18,-18,-8,24,-7,-18,-18,-18,24,-18,-18,-18,-18,-18,-18,-11,24,-12,24,-14,24,-13,-15,-16,-9,]),'EQ':([11,13,],[15,16,]),'MINUS':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[22,22,-8,29,-7,22,22,22,29,22,22,22,22,22,22,-11,29,-12,29,-14,29,-13,-15,-16,-9,]),'$end':([1,10,],[0,-1,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'astNeuron':([0,],[1,]),}
+_lr_goto_items = {'astCalculator':([0,],[1,]),'astComputation':([8,],[12,]),'astExpression':([15,16,20,21,22,24,25,26,27,28,29,],[18,23,30,31,32,33,34,35,36,37,38,]),'astDeclaration':([9,],[14,]),'astBody':([4,],[7,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -25,6 +25,23 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> astNeuron","S'",1,None,None,None),
-  ('astNeuron -> CALCULATOR','astNeuron',1,'p_calculator','SimpleExpressionGrammar.py',52),
+  ("S' -> astCalculator","S'",1,None,None,None),
+  ('astCalculator -> CALCULATOR STRING COLON astBody END','astCalculator',5,'p_expression_plus','SimpleExpressionGrammar.py',62),
+  ('astBody -> DECLARATION COLON astDeclaration','astBody',3,'p_body','SimpleExpressionGrammar.py',68),
+  ('astBody -> COMPUTATION COLON astComputation','astBody',3,'p_body','SimpleExpressionGrammar.py',69),
+  ('astDeclaration -> STRING','astDeclaration',1,'p_declaration','SimpleExpressionGrammar.py',75),
+  ('astDeclaration -> STRING EQ astExpression','astDeclaration',3,'p_declaration','SimpleExpressionGrammar.py',76),
+  ('astComputation -> STRING EQ astExpression','astComputation',3,'p_computation','SimpleExpressionGrammar.py',80),
+  ('astExpression -> NUMBER','astExpression',1,'p_expression','SimpleExpressionGrammar.py',84),
+  ('astExpression -> STRING','astExpression',1,'p_expression','SimpleExpressionGrammar.py',85),
+  ('astExpression -> LPAREN astExpression RPAREN','astExpression',3,'p_expression','SimpleExpressionGrammar.py',86),
+  ('astExpression -> astExpression POW astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',87),
+  ('astExpression -> PLUS astExpression','astExpression',2,'p_expression','SimpleExpressionGrammar.py',88),
+  ('astExpression -> MINUS astExpression','astExpression',2,'p_expression','SimpleExpressionGrammar.py',89),
+  ('astExpression -> astExpression TIMES astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',90),
+  ('astExpression -> astExpression DIVIDE astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',91),
+  ('astExpression -> astExpression PLUS astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',92),
+  ('astExpression -> astExpression MINUS astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',93),
+  ('astExpression -> astExpression MODULO astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',94),
+  ('astExpression -> <empty>','astExpression',0,'p_expression','SimpleExpressionGrammar.py',95),
 ]

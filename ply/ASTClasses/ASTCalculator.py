@@ -1,7 +1,7 @@
 import ASTComputation
 import ASTDeclaration
 
-class ASTNeuron():
+class ASTCalculator():
     __name = None
     __body = {}
 

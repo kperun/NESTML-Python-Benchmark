@@ -14,13 +14,13 @@ def main(argv):
     input = FileStream("testExpession")
     # First build the lexer
     lexer = lex.lex()
-    yacc.yacc()
+    parser = yacc.yacc()
     lexer.input(str(input))
     #print str(input)
     for tok in lexer:
         print(tok)
 
-    #yacc.parse(str(input))
+    parser.parse(str(input))
     """
     lexer = SimpleExpressionGrammerLexer(input)
     stream = CommonTokenStream(lexer)
