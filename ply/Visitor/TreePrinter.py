@@ -1,4 +1,4 @@
-import ASTNeuron
+import ASTCalculator
 import ASTDeclaration
 import ASTComputation
 import ASTStatement
@@ -10,9 +10,9 @@ import types
 class TreePrinter:
     @classmethod
     def printTree(cls,elem):
-        if isinstance(elem,ASTNeuron.ASTNeuron):
+        if isinstance(elem,ASTCalculator.ASTCalculator):
             print "calculator " + str(elem.getName()) + ":"
-            for part in elem.getBody():
+            for part in elem.getBody()[0]:
                 TreePrinter.printTree(part)
             print "end"
         if isinstance(elem,ASTDeclaration.ASTDeclaration):
@@ -27,7 +27,7 @@ class TreePrinter:
             print "end"
         if isinstance(elem,ASTStatement.ASTStatement):
             if elem.hasExpr():
-                print str(elem.getName().getName()),
+                print str(elem.getName()),
                 print " = ",
                 TreePrinter.printTree(elem.getExpr())
             else:

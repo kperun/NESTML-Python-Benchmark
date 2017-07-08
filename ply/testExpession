@@ -1,4 +1,10 @@
 calculator test:
-declaration:
-hi = (-1+1)
+    declaration:
+        a = (-1+1)
+        b
+    end
+
+    computation:
+        b = (-1+a)**2
+    end
 end

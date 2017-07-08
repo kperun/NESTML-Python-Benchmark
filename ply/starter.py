@@ -8,6 +8,7 @@ sys.path.append('CoCos')
 sys.path.append('Backend')
 import ply.lex as lex
 import ply.yacc as yacc
+from TreePrinter import TreePrinter
 from SimpleExpressionGrammar import *
 
 def main(argv):
@@ -17,10 +18,14 @@ def main(argv):
     parser = yacc.yacc()
     lexer.input(str(input))
     #print str(input)
-    for tok in lexer:
-        print(tok)
+    #for tok in lexer:
+    #    print(tok)
+    print "Start generating AST",
+    calculator = parser.parse(str(input))
+    print "done"
+    print "---------Print AST:---------"
+    TreePrinter.printTree(calculator) # print the ast
 
-    parser.parse(str(input))
     """
     lexer = SimpleExpressionGrammerLexer(input)
     stream = CommonTokenStream(lexer)

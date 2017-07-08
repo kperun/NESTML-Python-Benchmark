@@ -3,6 +3,13 @@ import sys
 
 sys.path.append('../ASTClasses')
 import ASTCalculator
+import ASTDeclaration
+import ASTComputation
+import ASTStatement
+import ASTNumericLiteral
+import ASTName
+import ASTExpr
+
 
 tokens = ['NUMBER', 'END', 'CALCULATOR', 'STRING', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MODULO', 'POW',
           'LPAREN', 'RPAREN', 'COLON','NEWLINE','DECLARATION','COMPUTATION','EQ']
@@ -58,45 +65,80 @@ calculator = None
 start = 'astCalculator'
 
 
-def p_expression_plus(p):
+def p_astCalculator(p):
     'astCalculator : CALCULATOR STRING COLON astBody END'
-    calculator = ASTCalculator.ASTCalculator(str(p[2]),[p[4]])
-    
+    p[0] = ASTCalculator.ASTCalculator(str(p[2]),[p[4]])
+
 
 
 def p_body(p):
     """
-    astBody : DECLARATION COLON astDeclaration 
-            | COMPUTATION COLON astComputation 
+    astBody : DECLARATION COLON astDeclaration END
+            | COMPUTATION COLON astComputation END
+            | astBody astBody
     """
-    #p[0] = p[1]
+    if p[2] == ':' and p[1]=="declaration":#the header
+        p[0] =  ASTDeclaration.ASTDeclaration([p[3]])
+    elif p[2] == ':' and p[1]=="computation":
+        p[0] = ASTComputation.ASTComputation([p[3]])
+    else:
+        p[0] = [p[1],p[2]]
+
 
 def p_declaration(p):
     """
     astDeclaration : STRING 
                    | STRING EQ astExpression
+                   | astDeclaration astDeclaration
     """
+    if len(p) == 2:# case sole declration
+        p[0] = ASTStatement.ASTStatement.makeDecl(p[1])
+    elif len(p) == 4:
+        p[0] = ASTStatement.ASTStatement.makeDeclWithExpression(p[1],p[3])
+
+
+
 
 def p_computation(p):
     'astComputation : STRING EQ astExpression'
+    p[0] = ASTStatement.ASTStatement.makeDeclWithExpression(p[1],p[3])
 
 def p_expression(p):
     """
-    astExpression : NUMBER
-                  | STRING
-                  | LPAREN astExpression RPAREN
-                  | astExpression POW astExpression
-                  | PLUS astExpression
-                  | MINUS astExpression
-                  | astExpression TIMES astExpression
-                  | astExpression DIVIDE astExpression
-                  | astExpression PLUS astExpression
-                  | astExpression MINUS astExpression
-                  | astExpression MODULO astExpression
-                  | 
+        astExpression : NUMBER
+                      | STRING
+                      | LPAREN astExpression RPAREN
+                      | astExpression POW astExpression
+                      | PLUS astExpression
+                      | MINUS astExpression
+                      | astExpression TIMES astExpression
+                      | astExpression DIVIDE astExpression
+                      | astExpression PLUS astExpression
+                      | astExpression MINUS astExpression
+                      | astExpression MODULO astExpression
+                      | 
     """
-
-
+    if len(p)==2:
+        if type(p[1]) == int:
+            p[0] = ASTNumericLiteral.ASTNumericLiteral.makeLiteral(p[1])
+        else:
+            p[0] = ASTName.ASTName(p[1])
+    elif len(p)==3:
+        if p[1]=='+':
+            p[0] = ASTExpr.ASTExpr.makeTerm(p[2])
+            p[0].isUnaryPlus = True
+        else:
+            p[0] = ASTExpr.ASTExpr.makeTerm(p[2])
+            p[0].isUnaryMinus = True
+    elif len(p)==4:
+        if p[1]=='(' and p[3] == ')':
+            p[0] = ASTExpr.ASTExpr.makeTerm(p[2])
+            p[0].leftBracket = True
+            p[0].rightBracket = True
+        elif p[2]=='**':
+            p[0] = ASTExpr.ASTExpr.makePow(p[1],p[3])
+        else:
+            p[0] = ASTExpr.ASTExpr.makeExpr(p[1],p[3],p[2])
 
 
 def p_error(p):

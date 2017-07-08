@@ -5,9 +5,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'astCalculatorleftPLUSMINUSleftTIMESDIVIDENUMBER END CALCULATOR STRING PLUS MINUS TIMES DIVIDE MODULO POW LPAREN RPAREN COLON NEWLINE DECLARATION COMPUTATION EQastCalculator : CALCULATOR STRING COLON astBody END\n    astBody : DECLARATION COLON astDeclaration \n            | COMPUTATION COLON astComputation \n    \n    astDeclaration : STRING \n                   | STRING EQ astExpression\n    astComputation : STRING EQ astExpression\n    astExpression : NUMBER\n                  | STRING\n                  | LPAREN astExpression RPAREN\n                  | astExpression POW astExpression\n                  | PLUS astExpression\n                  | MINUS astExpression\n                  | astExpression TIMES astExpression\n                  | astExpression DIVIDE astExpression\n                  | astExpression PLUS astExpression\n                  | astExpression MINUS astExpression\n                  | astExpression MODULO astExpression\n                  | \n    '
+_lr_signature = 'astCalculatorleftPLUSMINUSleftTIMESDIVIDENUMBER END CALCULATOR STRING PLUS MINUS TIMES DIVIDE MODULO POW LPAREN RPAREN COLON NEWLINE DECLARATION COMPUTATION EQastCalculator : CALCULATOR STRING COLON astBody END\n    astBody : DECLARATION COLON astDeclaration END\n            | COMPUTATION COLON astComputation END\n            | astBody astBody\n    \n    astDeclaration : STRING \n                   | STRING EQ astExpression\n                   | astDeclaration astDeclaration\n    astComputation : STRING EQ astExpression\n        astExpression : NUMBER\n                      | STRING\n                      | LPAREN astExpression RPAREN\n                      | astExpression POW astExpression\n                      | PLUS astExpression\n                      | MINUS astExpression\n                      | astExpression TIMES astExpression\n                      | astExpression DIVIDE astExpression\n                      | astExpression PLUS astExpression\n                      | astExpression MINUS astExpression\n                      | astExpression MODULO astExpression\n                      | \n    '
     
-_lr_action_items = {'PLUS':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[20,20,-8,28,-7,20,20,20,28,20,20,20,20,20,20,-11,28,-12,28,-14,28,-13,-15,-16,-9,]),'DIVIDE':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[-18,-18,-8,25,-7,-18,-18,-18,25,-18,-18,-18,-18,-18,-18,25,25,25,25,-14,25,-13,25,25,-9,]),'END':([7,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,32,33,34,35,36,37,38,39,],[10,-3,-4,-2,-18,-18,-8,-6,-7,-18,-18,-5,-18,-18,-18,-18,-18,-18,-11,-12,-17,-14,-10,-13,-15,-16,-9,]),'STRING':([2,8,9,15,16,20,21,22,24,25,26,27,28,29,],[3,11,13,17,17,17,17,17,17,17,17,17,17,17,]),'POW':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[-18,-18,-8,26,-7,-18,-18,-18,26,-18,-18,-18,-18,-18,-18,-11,26,-12,26,-14,26,-13,-15,-16,-9,]),'CALCULATOR':([0,],[2,]),'NUMBER':([15,16,20,21,22,24,25,26,27,28,29,],[19,19,19,19,19,19,19,19,19,19,19,]),'RPAREN':([17,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[-8,-7,-18,-18,-18,-18,-18,-18,-18,-18,-18,-11,39,-12,-17,-14,-10,-13,-15,-16,-9,]),'TIMES':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[-18,-18,-8,27,-7,-18,-18,-18,27,-18,-18,-18,-18,-18,-18,27,27,27,27,-14,27,-13,27,27,-9,]),'COLON':([3,5,6,],[4,8,9,]),'COMPUTATION':([4,],[5,]),'DECLARATION':([4,],[6,]),'LPAREN':([15,16,20,21,22,24,25,26,27,28,29,],[21,21,21,21,21,21,21,21,21,21,21,]),'MODULO':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[-18,-18,-8,24,-7,-18,-18,-18,24,-18,-18,-18,-18,-18,-18,-11,24,-12,24,-14,24,-13,-15,-16,-9,]),'EQ':([11,13,],[15,16,]),'MINUS':([15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,],[22,22,-8,29,-7,22,22,22,29,22,22,22,22,22,22,-11,29,-12,29,-14,29,-13,-15,-16,-9,]),'$end':([1,10,],[0,-1,]),}
+_lr_action_items = {'PLUS':([16,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,],[24,24,-10,32,-9,24,24,24,32,24,24,24,24,24,24,-13,32,-14,32,-16,32,-15,-17,-18,-11,]),'DIVIDE':([16,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,],[-20,-20,-10,29,-9,-20,-20,-20,29,-20,-20,-20,-20,-20,-20,29,29,29,29,-16,29,-15,29,29,-11,]),'END':([7,11,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34,36,37,38,39,40,41,42,43,],[10,-4,17,-5,19,-20,-3,-20,-2,-7,-10,-8,-9,-20,-20,-6,-20,-20,-20,-20,-20,-20,-13,-14,-19,-16,-12,-15,-17,-18,-11,]),'STRING':([2,8,9,14,15,16,18,20,21,23,24,25,26,27,28,29,30,31,32,33,34,36,37,38,39,40,41,42,43,],[3,12,14,-5,14,21,21,14,-10,-9,21,21,21,-6,21,21,21,21,21,21,-13,-14,-19,-16,-12,-15,-17,-18,-11,]),'POW':([16,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,],[-20,-20,-10,30,-9,-20,-20,-20,30,-20,-20,-20,-20,-20,-20,-13,30,-14,30,-16,30,-15,-17,-18,-11,]),'CALCULATOR':([0,],[2,]),'NUMBER':([16,18,24,25,26,28,29,30,31,32,33,],[23,23,23,23,23,23,23,23,23,23,23,]),'RPAREN':([21,23,24,25,26,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,],[-10,-9,-20,-20,-20,-20,-20,-20,-20,-20,-20,-13,43,-14,-19,-16,-12,-15,-17,-18,-11,]),'TIMES':([16,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,],[-20,-20,-10,31,-9,-20,-20,-20,31,-20,-20,-20,-20,-20,-20,31,31,31,31,-16,31,-15,31,31,-11,]),'COLON':([3,5,6,],[4,8,9,]),'COMPUTATION':([4,7,11,17,19,],[5,5,5,-3,-2,]),'DECLARATION':([4,7,11,17,19,],[6,6,6,-3,-2,]),'LPAREN':([16,18,24,25,26,28,29,30,31,32,33,],[25,25,25,25,25,25,25,25,25,25,25,]),'MODULO':([16,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,],[-20,-20,-10,28,-9,-20,-20,-20,28,-20,-20,-20,-20,-20,-20,-13,28,-14,28,-16,28,-15,-17,-18,-11,]),'EQ':([12,14,],[16,18,]),'MINUS':([16,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,],[26,26,-10,33,-9,26,26,26,33,26,26,26,26,26,26,-13,33,-14,33,-16,33,-15,-17,-18,-11,]),'$end':([1,10,],[0,-1,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'astCalculator':([0,],[1,]),'astComputation':([8,],[12,]),'astExpression':([15,16,20,21,22,24,25,26,27,28,29,],[18,23,30,31,32,33,34,35,36,37,38,]),'astDeclaration':([9,],[14,]),'astBody':([4,],[7,]),}
+_lr_goto_items = {'astCalculator':([0,],[1,]),'astComputation':([8,],[13,]),'astExpression':([16,18,24,25,26,28,29,30,31,32,33,],[22,27,34,35,36,37,38,39,40,41,42,]),'astDeclaration':([9,15,20,],[15,20,20,]),'astBody':([4,7,11,],[7,11,11,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,22 +26,24 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> astCalculator","S'",1,None,None,None),
-  ('astCalculator -> CALCULATOR STRING COLON astBody END','astCalculator',5,'p_expression_plus','SimpleExpressionGrammar.py',62),
-  ('astBody -> DECLARATION COLON astDeclaration','astBody',3,'p_body','SimpleExpressionGrammar.py',68),
-  ('astBody -> COMPUTATION COLON astComputation','astBody',3,'p_body','SimpleExpressionGrammar.py',69),
-  ('astDeclaration -> STRING','astDeclaration',1,'p_declaration','SimpleExpressionGrammar.py',75),
-  ('astDeclaration -> STRING EQ astExpression','astDeclaration',3,'p_declaration','SimpleExpressionGrammar.py',76),
-  ('astComputation -> STRING EQ astExpression','astComputation',3,'p_computation','SimpleExpressionGrammar.py',80),
-  ('astExpression -> NUMBER','astExpression',1,'p_expression','SimpleExpressionGrammar.py',84),
-  ('astExpression -> STRING','astExpression',1,'p_expression','SimpleExpressionGrammar.py',85),
-  ('astExpression -> LPAREN astExpression RPAREN','astExpression',3,'p_expression','SimpleExpressionGrammar.py',86),
-  ('astExpression -> astExpression POW astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',87),
-  ('astExpression -> PLUS astExpression','astExpression',2,'p_expression','SimpleExpressionGrammar.py',88),
-  ('astExpression -> MINUS astExpression','astExpression',2,'p_expression','SimpleExpressionGrammar.py',89),
-  ('astExpression -> astExpression TIMES astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',90),
-  ('astExpression -> astExpression DIVIDE astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',91),
-  ('astExpression -> astExpression PLUS astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',92),
-  ('astExpression -> astExpression MINUS astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',93),
-  ('astExpression -> astExpression MODULO astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',94),
-  ('astExpression -> <empty>','astExpression',0,'p_expression','SimpleExpressionGrammar.py',95),
+  ('astCalculator -> CALCULATOR STRING COLON astBody END','astCalculator',5,'p_astCalculator','SimpleExpressionGrammar.py',62),
+  ('astBody -> DECLARATION COLON astDeclaration END','astBody',4,'p_body','SimpleExpressionGrammar.py',69),
+  ('astBody -> COMPUTATION COLON astComputation END','astBody',4,'p_body','SimpleExpressionGrammar.py',70),
+  ('astBody -> astBody astBody','astBody',2,'p_body','SimpleExpressionGrammar.py',71),
+  ('astDeclaration -> STRING','astDeclaration',1,'p_declaration','SimpleExpressionGrammar.py',79),
+  ('astDeclaration -> STRING EQ astExpression','astDeclaration',3,'p_declaration','SimpleExpressionGrammar.py',80),
+  ('astDeclaration -> astDeclaration astDeclaration','astDeclaration',2,'p_declaration','SimpleExpressionGrammar.py',81),
+  ('astComputation -> STRING EQ astExpression','astComputation',3,'p_computation','SimpleExpressionGrammar.py',91),
+  ('astExpression -> NUMBER','astExpression',1,'p_expression','SimpleExpressionGrammar.py',95),
+  ('astExpression -> STRING','astExpression',1,'p_expression','SimpleExpressionGrammar.py',96),
+  ('astExpression -> LPAREN astExpression RPAREN','astExpression',3,'p_expression','SimpleExpressionGrammar.py',97),
+  ('astExpression -> astExpression POW astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',98),
+  ('astExpression -> PLUS astExpression','astExpression',2,'p_expression','SimpleExpressionGrammar.py',99),
+  ('astExpression -> MINUS astExpression','astExpression',2,'p_expression','SimpleExpressionGrammar.py',100),
+  ('astExpression -> astExpression TIMES astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',101),
+  ('astExpression -> astExpression DIVIDE astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',102),
+  ('astExpression -> astExpression PLUS astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',103),
+  ('astExpression -> astExpression MINUS astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',104),
+  ('astExpression -> astExpression MODULO astExpression','astExpression',3,'p_expression','SimpleExpressionGrammar.py',105),
+  ('astExpression -> <empty>','astExpression',0,'p_expression','SimpleExpressionGrammar.py',106),
 ]
