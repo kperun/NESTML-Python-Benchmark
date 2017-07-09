@@ -147,7 +147,7 @@ class ASTExpr:
             temp = temp + str(self.getExponent().prettyPrint())
             temp = temp + ")"
         elif self.isCombinedExpression():
-            temp = temp + self.getLhs().prettyPrint()
+            temp = temp + str(self.getLhs().prettyPrint())
             if self.getIsPlus():
                 temp = temp + "+"
             elif self.getIsMinus():
@@ -158,7 +158,7 @@ class ASTExpr:
                 temp = temp + "/"
             elif self.getIsModulo():
                 temp = temp + "%"
-            temp = temp + self.getRhs().prettyPrint()
+            temp = temp + str(self.getRhs().prettyPrint())
         return temp
 
     def getVariables(self):

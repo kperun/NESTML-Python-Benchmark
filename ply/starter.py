@@ -10,6 +10,7 @@ import ply.lex as lex
 import ply.yacc as yacc
 from TreePrinter import TreePrinter
 from SimpleExpressionGrammar import *
+from SymbolTableVisitor import SymbolTableBuilder
 
 def main(argv):
     input = FileStream("testExpession")
@@ -25,30 +26,16 @@ def main(argv):
     print "done"
     print "---------Print AST:---------"
     TreePrinter.printTree(calculator) # print the ast
-
-    """
-    lexer = SimpleExpressionGrammerLexer(input)
-    stream = CommonTokenStream(lexer)
-    parser = SimpleExpressionGrammerParser(stream)
-    tree = parser.astNeuron()
-    print "---------Print parse tree:---------"
-
-    # first print the tree
-    visitor = SimplePrettyPrinter()
-    visitor.visit(tree)
-    # now create an AST from the given tree
-    visitor2 = ASTBuilder()
-    calculator = visitor2.visit(tree)
-    print "---------Print AST:---------"
-    TreePrinter.printTree(calculator) # print the ast
     print "----------------------------"
-    print "Creating Symbol table ..."
+    print "Creating Symbol table ...",
     visitor3 = SymbolTableBuilder()
-    symbol_table = visitor3.visit(tree)
+    symbol_table = visitor3.visitAstCalculator(calculator)
+    print "done"
     print "--------Symbol Table:-------"
     symbol_table.printTable()
     print "----------------------------"
     print "Check CoCos....",
+    """
     OnlyDeclaredCoCo.checkTree(calculator, symbol_table)
     print "done"
     print "Start printing with Cheetah...",

@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('../ASTClasses')
-import ASTNeuron
+import ASTCalculator
 import ASTDeclaration
 import ASTComputation
 import ASTStatement
@@ -9,7 +9,6 @@ import ASTName
 import ASTExpr
 import ASTNumericLiteral
 from antlr4 import *
-from SimpleExpressionGrammerVisitor import SimpleExpressionGrammerVisitor
 
 
 class ASTBuilder(ParseTreeVisitor):

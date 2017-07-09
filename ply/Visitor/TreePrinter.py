@@ -18,12 +18,20 @@ class TreePrinter:
         if isinstance(elem,ASTDeclaration.ASTDeclaration):
             print "declaration: "
             for part in elem.getDecl():
-                TreePrinter.printTree(part)
+                if isinstance(part,ASTStatement.ASTStatement):
+                    TreePrinter.printTree(part)
+                else:
+                    for p in part:
+                        TreePrinter.printTree(p)
             print "end"
         if isinstance(elem,ASTComputation.ASTComputation):
             print "computation: "
             for part in elem.getDecl():
-                TreePrinter.printTree(part)
+                if isinstance(part, ASTStatement.ASTStatement):
+                    TreePrinter.printTree(part)
+                else:
+                    for p in part:
+                        TreePrinter.printTree(p)
             print "end"
         if isinstance(elem,ASTStatement.ASTStatement):
             if elem.hasExpr():
@@ -31,6 +39,6 @@ class TreePrinter:
                 print " = ",
                 TreePrinter.printTree(elem.getExpr())
             else:
-                print str(elem.getName().getName())
+                print str(elem.getName())
         if isinstance(elem,ASTExpr.ASTExpr):
             print elem.prettyPrint()

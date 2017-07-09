@@ -20,11 +20,21 @@ class ASTCalculator():
         for i in self.body:
             if isinstance(i,ASTDeclaration.ASTDeclaration):
                 temp.append(i)
+            elif len(i) > 0:
+                for d in i:
+                    if isinstance(d,ASTDeclaration.ASTDeclaration):
+                        for st in d.decl:
+                            temp.append(st)
         return temp
 
     def getComputations(self):
         temp = []
         for i in self.body:
-            if isinstance(i, ASTComputation.ASTComputation):
+            if isinstance(i,ASTComputation.ASTComputation):
                 temp.append(i)
+            elif len(i) > 0:
+                for d in i:
+                    if isinstance(d,ASTComputation.ASTComputation):
+                        for st in d.decl:
+                            temp.append(st)
         return temp
