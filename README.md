@@ -1,7 +1,7 @@
 # NESTML@Python Benchmark
 
-This repository contains several implemented prototypes as used to decide which frontend, middleware and backend will be selected for the upcoming project **NESTML@Python**.
-
+**Remark**: this repository exists only for the sake of Prototyping.
+It contains several implemented prototypes as used to decide which frontend, middleware and backend will be selected for the upcoming project **NESTML@Python**. The provided code is incomplete, contains possible bugs and other unintended behavior. 
 
 The following frontend toolchains have been selected for testing:
 
