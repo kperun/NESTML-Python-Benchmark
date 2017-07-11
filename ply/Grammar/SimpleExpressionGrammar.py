@@ -101,8 +101,14 @@ def p_declaration(p):
 
 
 def p_computation(p):
-    'astComputation : STRING EQ astExpression'
-    p[0] = ASTStatement.ASTStatement.makeDeclWithExpression(p[1],p[3])
+    """
+    astComputation : STRING EQ astExpression
+                   | astComputation astComputation     
+    """
+    if len(p)==4:
+        p[0] = ASTStatement.ASTStatement.makeDeclWithExpression(p[1],p[3])
+    else:
+        p[0] = [p[1],p[2]]
 
 def p_expression(p):
     """
@@ -134,8 +140,8 @@ def p_expression(p):
     elif len(p)==4:
         if p[1]=='(' and p[3] == ')':
             p[0] = ASTExpr.ASTExpr.makeTerm(p[2])
-            p[0].leftBracket = True
-            p[0].rightBracket = True
+            p[0].isRightBracket = True
+            p[0].isLeftBracket = True
         elif p[2]=='**':
             p[0] = ASTExpr.ASTExpr.makePow(p[1],p[3])
         else:

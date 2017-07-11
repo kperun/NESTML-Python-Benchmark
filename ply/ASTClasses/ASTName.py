@@ -9,3 +9,5 @@ class ASTName:
 
     def prettyPrint(self):
         return self.name
+    def getVariables(self):
+        return [self.name]

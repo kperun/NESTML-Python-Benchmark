@@ -12,6 +12,11 @@ class SimpleSymbolTable:
         else:
             self.symbolLookUpTable[key] = value
 
+    def lookUp(self,key):
+        if key in self.symbolLookUpTable:
+            return self.symbolLookUpTable[key]
+        else:
+            return None
 
     def printTable(self):
         if self.symbolLookUpTable is not None:

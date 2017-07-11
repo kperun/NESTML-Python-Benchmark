@@ -37,4 +37,6 @@ class ASTCalculator():
                     if isinstance(d,ASTComputation.ASTComputation):
                         for st in d.decl:
                             temp.append(st)
+        #ret = [item for sublist in temp for item in sublist if item != []]
+
         return temp

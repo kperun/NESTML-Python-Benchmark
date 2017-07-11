@@ -13,3 +13,5 @@ class ASTNumericLiteral:
 
     def prettyPrint(self):
         return self.value
+    def getVariables(self):
+        return []

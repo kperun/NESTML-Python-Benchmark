@@ -139,7 +139,11 @@ class ASTExpr:
                 temp = temp + "+"
             elif self.getIsUnaryMinus():
                 temp = temp + "-"
+            elif self.hasLeftBracket():
+                temp = temp + '('
             temp = temp + str(self.getTerm().prettyPrint())
+            if self.hasRightBracket():
+                temp = temp + ')'
         elif self.isExponentExpression():
             temp = temp + "pow("
             temp = temp + str(self.getBase().prettyPrint())
@@ -163,20 +167,20 @@ class ASTExpr:
 
     def getVariables(self):
         temp = []
-        if self.term is not None and isinstance(self.term,ASTName.ASTName):
-            temp.append(self.term.getName())
+        if self.term is not None:
+            temp.append(self.term.getVariables())
         if self.expr is not None:
             temp.append(self.expr.getVariables())
-        if self.base is not None:
+        if self.base is not None and not isinstance(self.base,ASTNumericLiteral.ASTNumericLiteral):
             temp.append(self.base.getVariables())
-        if self.exponent is not None:
+        if self.exponent is not None and not isinstance(self.exponent,ASTNumericLiteral.ASTNumericLiteral):
             temp.append(self.exponent.getVariables())
-        if self.lhs is not None:
+        if self.lhs is not None and not isinstance(self.lhs,ASTNumericLiteral.ASTNumericLiteral):
             temp.append(self.lhs.getVariables())
-        if self.rhs is not None:
+        if self.rhs is not None and not isinstance(self.rhs,ASTNumericLiteral.ASTNumericLiteral):
             temp.append(self.rhs.getVariables())
-        if len(temp)>1:
-            ret = [item for sublist in temp for item in sublist]
+        if len(temp)>0:
+            ret = [item for sublist in temp for item in sublist if item != []]
         else:
             ret = temp
         return ret

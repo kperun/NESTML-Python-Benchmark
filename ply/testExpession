@@ -1,10 +1,9 @@
 calculator test:
     declaration:
         a = (-1+1)**2
-        c = d+1
     end
 
     computation:
-        b = (-1+a)**2
+        b = (-1+a)**a
     end
 end

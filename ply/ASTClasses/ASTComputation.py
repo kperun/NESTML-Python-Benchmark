@@ -1,3 +1,5 @@
+import ASTStatement
+
 class ASTComputation():
     decl = {}
 
@@ -5,4 +7,12 @@ class ASTComputation():
         self.decl = decl
 
     def getDecl(self):
-        return self.decl
+        temp = list()
+        for dec in self.decl:
+            if isinstance(dec,ASTStatement.ASTStatement):
+                temp.append(dec)
+            else:
+                for de in dec:
+                    temp.append(de)
+
+        return temp

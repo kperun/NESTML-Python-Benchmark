@@ -15,18 +15,19 @@ Rule 5     astDeclaration -> STRING
 Rule 6     astDeclaration -> STRING EQ astExpression
 Rule 7     astDeclaration -> astDeclaration astDeclaration
 Rule 8     astComputation -> STRING EQ astExpression
-Rule 9     astExpression -> NUMBER
-Rule 10    astExpression -> STRING
-Rule 11    astExpression -> LPAREN astExpression RPAREN
-Rule 12    astExpression -> astExpression POW astExpression
-Rule 13    astExpression -> PLUS astExpression
-Rule 14    astExpression -> MINUS astExpression
-Rule 15    astExpression -> astExpression TIMES astExpression
-Rule 16    astExpression -> astExpression DIVIDE astExpression
-Rule 17    astExpression -> astExpression PLUS astExpression
-Rule 18    astExpression -> astExpression MINUS astExpression
-Rule 19    astExpression -> astExpression MODULO astExpression
-Rule 20    astExpression -> <empty>
+Rule 9     astComputation -> astComputation astComputation
+Rule 10    astExpression -> NUMBER
+Rule 11    astExpression -> STRING
+Rule 12    astExpression -> LPAREN astExpression RPAREN
+Rule 13    astExpression -> astExpression POW astExpression
+Rule 14    astExpression -> PLUS astExpression
+Rule 15    astExpression -> MINUS astExpression
+Rule 16    astExpression -> astExpression TIMES astExpression
+Rule 17    astExpression -> astExpression DIVIDE astExpression
+Rule 18    astExpression -> astExpression PLUS astExpression
+Rule 19    astExpression -> astExpression MINUS astExpression
+Rule 20    astExpression -> astExpression MODULO astExpression
+Rule 21    astExpression -> <empty>
 
 Terminals, with rules where they appear
 
@@ -34,28 +35,28 @@ CALCULATOR           : 1
 COLON                : 1 2 3
 COMPUTATION          : 3
 DECLARATION          : 2
-DIVIDE               : 16
+DIVIDE               : 17
 END                  : 1 2 3
 EQ                   : 6 8
-LPAREN               : 11
-MINUS                : 14 18
-MODULO               : 19
+LPAREN               : 12
+MINUS                : 15 19
+MODULO               : 20
 NEWLINE              : 
-NUMBER               : 9
-PLUS                 : 13 17
-POW                  : 12
-RPAREN               : 11
-STRING               : 1 5 6 8 10
-TIMES                : 15
+NUMBER               : 10
+PLUS                 : 14 18
+POW                  : 13
+RPAREN               : 12
+STRING               : 1 5 6 8 11
+TIMES                : 16
 error                : 
 
 Nonterminals, with rules where they appear
 
 astBody              : 1 4 4
 astCalculator        : 0
-astComputation       : 3
+astComputation       : 3 9 9
 astDeclaration       : 2 7 7
-astExpression        : 6 8 11 12 12 13 14 15 15 16 16 17 17 18 18 19 19
+astExpression        : 6 8 12 13 13 14 15 16 16 17 17 18 18 19 19 20 20
 
 Parsing method: LALR
 
@@ -132,6 +133,7 @@ state 8
 
     (3) astBody -> COMPUTATION COLON . astComputation END
     (8) astComputation -> . STRING EQ astExpression
+    (9) astComputation -> . astComputation astComputation
 
     STRING          shift and go to state 12
 
@@ -184,9 +186,14 @@ state 12
 state 13
 
     (3) astBody -> COMPUTATION COLON astComputation . END
+    (9) astComputation -> astComputation . astComputation
+    (8) astComputation -> . STRING EQ astExpression
+    (9) astComputation -> . astComputation astComputation
 
     END             shift and go to state 17
+    STRING          shift and go to state 12
 
+    astComputation                 shift and go to state 18
 
 state 14
 
@@ -195,7 +202,7 @@ state 14
 
     STRING          reduce using rule 5 (astDeclaration -> STRING .)
     END             reduce using rule 5 (astDeclaration -> STRING .)
-    EQ              shift and go to state 18
+    EQ              shift and go to state 19
 
 
 state 15
@@ -206,44 +213,46 @@ state 15
     (6) astDeclaration -> . STRING EQ astExpression
     (7) astDeclaration -> . astDeclaration astDeclaration
 
-    END             shift and go to state 19
+    END             shift and go to state 20
     STRING          shift and go to state 14
 
-    astDeclaration                 shift and go to state 20
+    astDeclaration                 shift and go to state 21
 
 state 16
 
     (8) astComputation -> STRING EQ . astExpression
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-    END             reduce using rule 20 (astExpression -> .)
+  ! shift/reduce conflict for STRING resolved as shift
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
+    END             reduce using rule 21 (astExpression -> .)
 
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
+  ! STRING          [ reduce using rule 21 (astExpression -> .) ]
 
-    astExpression                  shift and go to state 22
+    astExpression                  shift and go to state 23
 
 state 17
 
@@ -256,41 +265,56 @@ state 17
 
 state 18
 
+    (9) astComputation -> astComputation astComputation .
+    (9) astComputation -> astComputation . astComputation
+    (8) astComputation -> . STRING EQ astExpression
+    (9) astComputation -> . astComputation astComputation
+
+  ! shift/reduce conflict for STRING resolved as shift
+    END             reduce using rule 9 (astComputation -> astComputation astComputation .)
+    STRING          shift and go to state 12
+
+  ! STRING          [ reduce using rule 9 (astComputation -> astComputation astComputation .) ]
+
+    astComputation                 shift and go to state 18
+
+state 19
+
     (6) astDeclaration -> STRING EQ . astExpression
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STRING resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-    END             reduce using rule 20 (astExpression -> .)
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
+    END             reduce using rule 21 (astExpression -> .)
 
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
-  ! STRING          [ reduce using rule 20 (astExpression -> .) ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
+  ! STRING          [ reduce using rule 21 (astExpression -> .) ]
 
-    astExpression                  shift and go to state 27
+    astExpression                  shift and go to state 28
 
-state 19
+state 20
 
     (2) astBody -> DECLARATION COLON astDeclaration END .
 
@@ -299,7 +323,7 @@ state 19
     END             reduce using rule 2 (astBody -> DECLARATION COLON astDeclaration END .)
 
 
-state 20
+state 21
 
     (7) astDeclaration -> astDeclaration astDeclaration .
     (7) astDeclaration -> astDeclaration . astDeclaration
@@ -313,553 +337,492 @@ state 20
 
   ! STRING          [ reduce using rule 7 (astDeclaration -> astDeclaration astDeclaration .) ]
 
-    astDeclaration                 shift and go to state 20
-
-state 21
-
-    (10) astExpression -> STRING .
-
-    POW             reduce using rule 10 (astExpression -> STRING .)
-    TIMES           reduce using rule 10 (astExpression -> STRING .)
-    DIVIDE          reduce using rule 10 (astExpression -> STRING .)
-    PLUS            reduce using rule 10 (astExpression -> STRING .)
-    MINUS           reduce using rule 10 (astExpression -> STRING .)
-    MODULO          reduce using rule 10 (astExpression -> STRING .)
-    END             reduce using rule 10 (astExpression -> STRING .)
-    STRING          reduce using rule 10 (astExpression -> STRING .)
-    RPAREN          reduce using rule 10 (astExpression -> STRING .)
-
+    astDeclaration                 shift and go to state 21
 
 state 22
 
-    (8) astComputation -> STRING EQ astExpression .
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
+    (11) astExpression -> STRING .
 
-    END             reduce using rule 8 (astComputation -> STRING EQ astExpression .)
-    POW             shift and go to state 30
-    TIMES           shift and go to state 31
-    DIVIDE          shift and go to state 29
-    PLUS            shift and go to state 32
-    MINUS           shift and go to state 33
-    MODULO          shift and go to state 28
+    POW             reduce using rule 11 (astExpression -> STRING .)
+    TIMES           reduce using rule 11 (astExpression -> STRING .)
+    DIVIDE          reduce using rule 11 (astExpression -> STRING .)
+    PLUS            reduce using rule 11 (astExpression -> STRING .)
+    MINUS           reduce using rule 11 (astExpression -> STRING .)
+    MODULO          reduce using rule 11 (astExpression -> STRING .)
+    END             reduce using rule 11 (astExpression -> STRING .)
+    STRING          reduce using rule 11 (astExpression -> STRING .)
+    RPAREN          reduce using rule 11 (astExpression -> STRING .)
 
 
 state 23
 
-    (9) astExpression -> NUMBER .
+    (8) astComputation -> STRING EQ astExpression .
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
 
-    POW             reduce using rule 9 (astExpression -> NUMBER .)
-    TIMES           reduce using rule 9 (astExpression -> NUMBER .)
-    DIVIDE          reduce using rule 9 (astExpression -> NUMBER .)
-    PLUS            reduce using rule 9 (astExpression -> NUMBER .)
-    MINUS           reduce using rule 9 (astExpression -> NUMBER .)
-    MODULO          reduce using rule 9 (astExpression -> NUMBER .)
-    END             reduce using rule 9 (astExpression -> NUMBER .)
-    STRING          reduce using rule 9 (astExpression -> NUMBER .)
-    RPAREN          reduce using rule 9 (astExpression -> NUMBER .)
+    STRING          reduce using rule 8 (astComputation -> STRING EQ astExpression .)
+    END             reduce using rule 8 (astComputation -> STRING EQ astExpression .)
+    POW             shift and go to state 31
+    TIMES           shift and go to state 32
+    DIVIDE          shift and go to state 30
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
+    MODULO          shift and go to state 29
 
 
 state 24
 
-    (13) astExpression -> PLUS . astExpression
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
+    (10) astExpression -> NUMBER .
+
+    POW             reduce using rule 10 (astExpression -> NUMBER .)
+    TIMES           reduce using rule 10 (astExpression -> NUMBER .)
+    DIVIDE          reduce using rule 10 (astExpression -> NUMBER .)
+    PLUS            reduce using rule 10 (astExpression -> NUMBER .)
+    MINUS           reduce using rule 10 (astExpression -> NUMBER .)
+    MODULO          reduce using rule 10 (astExpression -> NUMBER .)
+    END             reduce using rule 10 (astExpression -> NUMBER .)
+    STRING          reduce using rule 10 (astExpression -> NUMBER .)
+    RPAREN          reduce using rule 10 (astExpression -> NUMBER .)
+
+
+state 25
+
+    (14) astExpression -> PLUS . astExpression
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STRING resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-    END             reduce using rule 20 (astExpression -> .)
-    RPAREN          reduce using rule 20 (astExpression -> .)
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
+    END             reduce using rule 21 (astExpression -> .)
+    RPAREN          reduce using rule 21 (astExpression -> .)
 
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
-  ! STRING          [ reduce using rule 20 (astExpression -> .) ]
-
-    astExpression                  shift and go to state 34
-
-state 25
-
-    (11) astExpression -> LPAREN . astExpression RPAREN
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
-
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    RPAREN          reduce using rule 20 (astExpression -> .)
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
+  ! STRING          [ reduce using rule 21 (astExpression -> .) ]
 
     astExpression                  shift and go to state 35
 
 state 26
 
-    (14) astExpression -> MINUS . astExpression
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
+    (12) astExpression -> LPAREN . astExpression RPAREN
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for STRING resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-    END             reduce using rule 20 (astExpression -> .)
-    RPAREN          reduce using rule 20 (astExpression -> .)
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    RPAREN          reduce using rule 21 (astExpression -> .)
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
 
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
-  ! STRING          [ reduce using rule 20 (astExpression -> .) ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
 
     astExpression                  shift and go to state 36
 
 state 27
 
-    (6) astDeclaration -> STRING EQ astExpression .
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
-
-    STRING          reduce using rule 6 (astDeclaration -> STRING EQ astExpression .)
-    END             reduce using rule 6 (astDeclaration -> STRING EQ astExpression .)
-    POW             shift and go to state 30
-    TIMES           shift and go to state 31
-    DIVIDE          shift and go to state 29
-    PLUS            shift and go to state 32
-    MINUS           shift and go to state 33
-    MODULO          shift and go to state 28
-
-
-state 28
-
-    (19) astExpression -> astExpression MODULO . astExpression
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
+    (15) astExpression -> MINUS . astExpression
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STRING resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-    END             reduce using rule 20 (astExpression -> .)
-    RPAREN          reduce using rule 20 (astExpression -> .)
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
+    END             reduce using rule 21 (astExpression -> .)
+    RPAREN          reduce using rule 21 (astExpression -> .)
 
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
-  ! STRING          [ reduce using rule 20 (astExpression -> .) ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
+  ! STRING          [ reduce using rule 21 (astExpression -> .) ]
 
     astExpression                  shift and go to state 37
 
+state 28
+
+    (6) astDeclaration -> STRING EQ astExpression .
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
+
+    STRING          reduce using rule 6 (astDeclaration -> STRING EQ astExpression .)
+    END             reduce using rule 6 (astDeclaration -> STRING EQ astExpression .)
+    POW             shift and go to state 31
+    TIMES           shift and go to state 32
+    DIVIDE          shift and go to state 30
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
+    MODULO          shift and go to state 29
+
+
 state 29
 
-    (16) astExpression -> astExpression DIVIDE . astExpression
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
+    (20) astExpression -> astExpression MODULO . astExpression
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STRING resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-    END             reduce using rule 20 (astExpression -> .)
-    RPAREN          reduce using rule 20 (astExpression -> .)
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
+    END             reduce using rule 21 (astExpression -> .)
+    RPAREN          reduce using rule 21 (astExpression -> .)
 
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
-  ! STRING          [ reduce using rule 20 (astExpression -> .) ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
+  ! STRING          [ reduce using rule 21 (astExpression -> .) ]
 
     astExpression                  shift and go to state 38
 
 state 30
 
-    (12) astExpression -> astExpression POW . astExpression
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
+    (17) astExpression -> astExpression DIVIDE . astExpression
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STRING resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-    END             reduce using rule 20 (astExpression -> .)
-    RPAREN          reduce using rule 20 (astExpression -> .)
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
+    END             reduce using rule 21 (astExpression -> .)
+    RPAREN          reduce using rule 21 (astExpression -> .)
 
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
-  ! STRING          [ reduce using rule 20 (astExpression -> .) ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
+  ! STRING          [ reduce using rule 21 (astExpression -> .) ]
 
     astExpression                  shift and go to state 39
 
 state 31
 
-    (15) astExpression -> astExpression TIMES . astExpression
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
+    (13) astExpression -> astExpression POW . astExpression
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STRING resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-    END             reduce using rule 20 (astExpression -> .)
-    RPAREN          reduce using rule 20 (astExpression -> .)
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
+    END             reduce using rule 21 (astExpression -> .)
+    RPAREN          reduce using rule 21 (astExpression -> .)
 
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
-  ! STRING          [ reduce using rule 20 (astExpression -> .) ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
+  ! STRING          [ reduce using rule 21 (astExpression -> .) ]
 
     astExpression                  shift and go to state 40
 
 state 32
 
-    (17) astExpression -> astExpression PLUS . astExpression
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
+    (16) astExpression -> astExpression TIMES . astExpression
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STRING resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-    END             reduce using rule 20 (astExpression -> .)
-    RPAREN          reduce using rule 20 (astExpression -> .)
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
+    END             reduce using rule 21 (astExpression -> .)
+    RPAREN          reduce using rule 21 (astExpression -> .)
 
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
-  ! STRING          [ reduce using rule 20 (astExpression -> .) ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
+  ! STRING          [ reduce using rule 21 (astExpression -> .) ]
 
     astExpression                  shift and go to state 41
 
 state 33
 
-    (18) astExpression -> astExpression MINUS . astExpression
-    (9) astExpression -> . NUMBER
-    (10) astExpression -> . STRING
-    (11) astExpression -> . LPAREN astExpression RPAREN
-    (12) astExpression -> . astExpression POW astExpression
-    (13) astExpression -> . PLUS astExpression
-    (14) astExpression -> . MINUS astExpression
-    (15) astExpression -> . astExpression TIMES astExpression
-    (16) astExpression -> . astExpression DIVIDE astExpression
-    (17) astExpression -> . astExpression PLUS astExpression
-    (18) astExpression -> . astExpression MINUS astExpression
-    (19) astExpression -> . astExpression MODULO astExpression
-    (20) astExpression -> .
+    (18) astExpression -> astExpression PLUS . astExpression
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STRING resolved as shift
-    NUMBER          shift and go to state 23
-    STRING          shift and go to state 21
-    LPAREN          shift and go to state 25
-    PLUS            shift and go to state 24
-    MINUS           shift and go to state 26
-    POW             reduce using rule 20 (astExpression -> .)
-    TIMES           reduce using rule 20 (astExpression -> .)
-    DIVIDE          reduce using rule 20 (astExpression -> .)
-    MODULO          reduce using rule 20 (astExpression -> .)
-    END             reduce using rule 20 (astExpression -> .)
-    RPAREN          reduce using rule 20 (astExpression -> .)
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
+    END             reduce using rule 21 (astExpression -> .)
+    RPAREN          reduce using rule 21 (astExpression -> .)
 
-  ! PLUS            [ reduce using rule 20 (astExpression -> .) ]
-  ! MINUS           [ reduce using rule 20 (astExpression -> .) ]
-  ! STRING          [ reduce using rule 20 (astExpression -> .) ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
+  ! STRING          [ reduce using rule 21 (astExpression -> .) ]
 
     astExpression                  shift and go to state 42
 
 state 34
 
-    (13) astExpression -> PLUS astExpression .
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
+    (19) astExpression -> astExpression MINUS . astExpression
+    (10) astExpression -> . NUMBER
+    (11) astExpression -> . STRING
+    (12) astExpression -> . LPAREN astExpression RPAREN
+    (13) astExpression -> . astExpression POW astExpression
+    (14) astExpression -> . PLUS astExpression
+    (15) astExpression -> . MINUS astExpression
+    (16) astExpression -> . astExpression TIMES astExpression
+    (17) astExpression -> . astExpression DIVIDE astExpression
+    (18) astExpression -> . astExpression PLUS astExpression
+    (19) astExpression -> . astExpression MINUS astExpression
+    (20) astExpression -> . astExpression MODULO astExpression
+    (21) astExpression -> .
 
-    POW             reduce using rule 13 (astExpression -> PLUS astExpression .)
-    PLUS            reduce using rule 13 (astExpression -> PLUS astExpression .)
-    MINUS           reduce using rule 13 (astExpression -> PLUS astExpression .)
-    MODULO          reduce using rule 13 (astExpression -> PLUS astExpression .)
-    END             reduce using rule 13 (astExpression -> PLUS astExpression .)
-    STRING          reduce using rule 13 (astExpression -> PLUS astExpression .)
-    RPAREN          reduce using rule 13 (astExpression -> PLUS astExpression .)
-    TIMES           shift and go to state 31
-    DIVIDE          shift and go to state 29
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    NUMBER          shift and go to state 24
+    STRING          shift and go to state 22
+    LPAREN          shift and go to state 26
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 27
+    POW             reduce using rule 21 (astExpression -> .)
+    TIMES           reduce using rule 21 (astExpression -> .)
+    DIVIDE          reduce using rule 21 (astExpression -> .)
+    MODULO          reduce using rule 21 (astExpression -> .)
+    END             reduce using rule 21 (astExpression -> .)
+    RPAREN          reduce using rule 21 (astExpression -> .)
 
-  ! TIMES           [ reduce using rule 13 (astExpression -> PLUS astExpression .) ]
-  ! DIVIDE          [ reduce using rule 13 (astExpression -> PLUS astExpression .) ]
-  ! POW             [ shift and go to state 30 ]
-  ! PLUS            [ shift and go to state 32 ]
-  ! MINUS           [ shift and go to state 33 ]
-  ! MODULO          [ shift and go to state 28 ]
+  ! PLUS            [ reduce using rule 21 (astExpression -> .) ]
+  ! MINUS           [ reduce using rule 21 (astExpression -> .) ]
+  ! STRING          [ reduce using rule 21 (astExpression -> .) ]
 
+    astExpression                  shift and go to state 43
 
 state 35
 
-    (11) astExpression -> LPAREN astExpression . RPAREN
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
+    (14) astExpression -> PLUS astExpression .
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
 
-    RPAREN          shift and go to state 43
-    POW             shift and go to state 30
-    TIMES           shift and go to state 31
-    DIVIDE          shift and go to state 29
-    PLUS            shift and go to state 32
-    MINUS           shift and go to state 33
-    MODULO          shift and go to state 28
+    POW             reduce using rule 14 (astExpression -> PLUS astExpression .)
+    PLUS            reduce using rule 14 (astExpression -> PLUS astExpression .)
+    MINUS           reduce using rule 14 (astExpression -> PLUS astExpression .)
+    MODULO          reduce using rule 14 (astExpression -> PLUS astExpression .)
+    END             reduce using rule 14 (astExpression -> PLUS astExpression .)
+    STRING          reduce using rule 14 (astExpression -> PLUS astExpression .)
+    RPAREN          reduce using rule 14 (astExpression -> PLUS astExpression .)
+    TIMES           shift and go to state 32
+    DIVIDE          shift and go to state 30
+
+  ! TIMES           [ reduce using rule 14 (astExpression -> PLUS astExpression .) ]
+  ! DIVIDE          [ reduce using rule 14 (astExpression -> PLUS astExpression .) ]
+  ! POW             [ shift and go to state 31 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 34 ]
+  ! MODULO          [ shift and go to state 29 ]
 
 
 state 36
 
-    (14) astExpression -> MINUS astExpression .
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
+    (12) astExpression -> LPAREN astExpression . RPAREN
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
 
-    POW             reduce using rule 14 (astExpression -> MINUS astExpression .)
-    PLUS            reduce using rule 14 (astExpression -> MINUS astExpression .)
-    MINUS           reduce using rule 14 (astExpression -> MINUS astExpression .)
-    MODULO          reduce using rule 14 (astExpression -> MINUS astExpression .)
-    END             reduce using rule 14 (astExpression -> MINUS astExpression .)
-    STRING          reduce using rule 14 (astExpression -> MINUS astExpression .)
-    RPAREN          reduce using rule 14 (astExpression -> MINUS astExpression .)
-    TIMES           shift and go to state 31
-    DIVIDE          shift and go to state 29
-
-  ! TIMES           [ reduce using rule 14 (astExpression -> MINUS astExpression .) ]
-  ! DIVIDE          [ reduce using rule 14 (astExpression -> MINUS astExpression .) ]
-  ! POW             [ shift and go to state 30 ]
-  ! PLUS            [ shift and go to state 32 ]
-  ! MINUS           [ shift and go to state 33 ]
-  ! MODULO          [ shift and go to state 28 ]
+    RPAREN          shift and go to state 44
+    POW             shift and go to state 31
+    TIMES           shift and go to state 32
+    DIVIDE          shift and go to state 30
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
+    MODULO          shift and go to state 29
 
 
 state 37
 
-    (19) astExpression -> astExpression MODULO astExpression .
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
+    (15) astExpression -> MINUS astExpression .
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
 
-  ! shift/reduce conflict for POW resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for MODULO resolved as shift
-    END             reduce using rule 19 (astExpression -> astExpression MODULO astExpression .)
-    STRING          reduce using rule 19 (astExpression -> astExpression MODULO astExpression .)
-    RPAREN          reduce using rule 19 (astExpression -> astExpression MODULO astExpression .)
-    POW             shift and go to state 30
-    TIMES           shift and go to state 31
-    DIVIDE          shift and go to state 29
-    PLUS            shift and go to state 32
-    MINUS           shift and go to state 33
-    MODULO          shift and go to state 28
+    POW             reduce using rule 15 (astExpression -> MINUS astExpression .)
+    PLUS            reduce using rule 15 (astExpression -> MINUS astExpression .)
+    MINUS           reduce using rule 15 (astExpression -> MINUS astExpression .)
+    MODULO          reduce using rule 15 (astExpression -> MINUS astExpression .)
+    END             reduce using rule 15 (astExpression -> MINUS astExpression .)
+    STRING          reduce using rule 15 (astExpression -> MINUS astExpression .)
+    RPAREN          reduce using rule 15 (astExpression -> MINUS astExpression .)
+    TIMES           shift and go to state 32
+    DIVIDE          shift and go to state 30
 
-  ! POW             [ reduce using rule 19 (astExpression -> astExpression MODULO astExpression .) ]
-  ! TIMES           [ reduce using rule 19 (astExpression -> astExpression MODULO astExpression .) ]
-  ! DIVIDE          [ reduce using rule 19 (astExpression -> astExpression MODULO astExpression .) ]
-  ! PLUS            [ reduce using rule 19 (astExpression -> astExpression MODULO astExpression .) ]
-  ! MINUS           [ reduce using rule 19 (astExpression -> astExpression MODULO astExpression .) ]
-  ! MODULO          [ reduce using rule 19 (astExpression -> astExpression MODULO astExpression .) ]
+  ! TIMES           [ reduce using rule 15 (astExpression -> MINUS astExpression .) ]
+  ! DIVIDE          [ reduce using rule 15 (astExpression -> MINUS astExpression .) ]
+  ! POW             [ shift and go to state 31 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 34 ]
+  ! MODULO          [ shift and go to state 29 ]
 
 
 state 38
 
-    (16) astExpression -> astExpression DIVIDE astExpression .
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
-
-    POW             reduce using rule 16 (astExpression -> astExpression DIVIDE astExpression .)
-    TIMES           reduce using rule 16 (astExpression -> astExpression DIVIDE astExpression .)
-    DIVIDE          reduce using rule 16 (astExpression -> astExpression DIVIDE astExpression .)
-    PLUS            reduce using rule 16 (astExpression -> astExpression DIVIDE astExpression .)
-    MINUS           reduce using rule 16 (astExpression -> astExpression DIVIDE astExpression .)
-    MODULO          reduce using rule 16 (astExpression -> astExpression DIVIDE astExpression .)
-    END             reduce using rule 16 (astExpression -> astExpression DIVIDE astExpression .)
-    STRING          reduce using rule 16 (astExpression -> astExpression DIVIDE astExpression .)
-    RPAREN          reduce using rule 16 (astExpression -> astExpression DIVIDE astExpression .)
-
-  ! POW             [ shift and go to state 30 ]
-  ! TIMES           [ shift and go to state 31 ]
-  ! DIVIDE          [ shift and go to state 29 ]
-  ! PLUS            [ shift and go to state 32 ]
-  ! MINUS           [ shift and go to state 33 ]
-  ! MODULO          [ shift and go to state 28 ]
-
-
-state 39
-
-    (12) astExpression -> astExpression POW astExpression .
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
+    (20) astExpression -> astExpression MODULO astExpression .
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
 
   ! shift/reduce conflict for POW resolved as shift
   ! shift/reduce conflict for TIMES resolved as shift
@@ -867,121 +830,183 @@ state 39
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for MODULO resolved as shift
-    END             reduce using rule 12 (astExpression -> astExpression POW astExpression .)
-    STRING          reduce using rule 12 (astExpression -> astExpression POW astExpression .)
-    RPAREN          reduce using rule 12 (astExpression -> astExpression POW astExpression .)
-    POW             shift and go to state 30
-    TIMES           shift and go to state 31
-    DIVIDE          shift and go to state 29
-    PLUS            shift and go to state 32
-    MINUS           shift and go to state 33
-    MODULO          shift and go to state 28
+    END             reduce using rule 20 (astExpression -> astExpression MODULO astExpression .)
+    STRING          reduce using rule 20 (astExpression -> astExpression MODULO astExpression .)
+    RPAREN          reduce using rule 20 (astExpression -> astExpression MODULO astExpression .)
+    POW             shift and go to state 31
+    TIMES           shift and go to state 32
+    DIVIDE          shift and go to state 30
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
+    MODULO          shift and go to state 29
 
-  ! POW             [ reduce using rule 12 (astExpression -> astExpression POW astExpression .) ]
-  ! TIMES           [ reduce using rule 12 (astExpression -> astExpression POW astExpression .) ]
-  ! DIVIDE          [ reduce using rule 12 (astExpression -> astExpression POW astExpression .) ]
-  ! PLUS            [ reduce using rule 12 (astExpression -> astExpression POW astExpression .) ]
-  ! MINUS           [ reduce using rule 12 (astExpression -> astExpression POW astExpression .) ]
-  ! MODULO          [ reduce using rule 12 (astExpression -> astExpression POW astExpression .) ]
+  ! POW             [ reduce using rule 20 (astExpression -> astExpression MODULO astExpression .) ]
+  ! TIMES           [ reduce using rule 20 (astExpression -> astExpression MODULO astExpression .) ]
+  ! DIVIDE          [ reduce using rule 20 (astExpression -> astExpression MODULO astExpression .) ]
+  ! PLUS            [ reduce using rule 20 (astExpression -> astExpression MODULO astExpression .) ]
+  ! MINUS           [ reduce using rule 20 (astExpression -> astExpression MODULO astExpression .) ]
+  ! MODULO          [ reduce using rule 20 (astExpression -> astExpression MODULO astExpression .) ]
+
+
+state 39
+
+    (17) astExpression -> astExpression DIVIDE astExpression .
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
+
+    POW             reduce using rule 17 (astExpression -> astExpression DIVIDE astExpression .)
+    TIMES           reduce using rule 17 (astExpression -> astExpression DIVIDE astExpression .)
+    DIVIDE          reduce using rule 17 (astExpression -> astExpression DIVIDE astExpression .)
+    PLUS            reduce using rule 17 (astExpression -> astExpression DIVIDE astExpression .)
+    MINUS           reduce using rule 17 (astExpression -> astExpression DIVIDE astExpression .)
+    MODULO          reduce using rule 17 (astExpression -> astExpression DIVIDE astExpression .)
+    END             reduce using rule 17 (astExpression -> astExpression DIVIDE astExpression .)
+    STRING          reduce using rule 17 (astExpression -> astExpression DIVIDE astExpression .)
+    RPAREN          reduce using rule 17 (astExpression -> astExpression DIVIDE astExpression .)
+
+  ! POW             [ shift and go to state 31 ]
+  ! TIMES           [ shift and go to state 32 ]
+  ! DIVIDE          [ shift and go to state 30 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 34 ]
+  ! MODULO          [ shift and go to state 29 ]
 
 
 state 40
 
-    (15) astExpression -> astExpression TIMES astExpression .
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
+    (13) astExpression -> astExpression POW astExpression .
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
 
-    POW             reduce using rule 15 (astExpression -> astExpression TIMES astExpression .)
-    TIMES           reduce using rule 15 (astExpression -> astExpression TIMES astExpression .)
-    DIVIDE          reduce using rule 15 (astExpression -> astExpression TIMES astExpression .)
-    PLUS            reduce using rule 15 (astExpression -> astExpression TIMES astExpression .)
-    MINUS           reduce using rule 15 (astExpression -> astExpression TIMES astExpression .)
-    MODULO          reduce using rule 15 (astExpression -> astExpression TIMES astExpression .)
-    END             reduce using rule 15 (astExpression -> astExpression TIMES astExpression .)
-    STRING          reduce using rule 15 (astExpression -> astExpression TIMES astExpression .)
-    RPAREN          reduce using rule 15 (astExpression -> astExpression TIMES astExpression .)
+  ! shift/reduce conflict for POW resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for MODULO resolved as shift
+    END             reduce using rule 13 (astExpression -> astExpression POW astExpression .)
+    STRING          reduce using rule 13 (astExpression -> astExpression POW astExpression .)
+    RPAREN          reduce using rule 13 (astExpression -> astExpression POW astExpression .)
+    POW             shift and go to state 31
+    TIMES           shift and go to state 32
+    DIVIDE          shift and go to state 30
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
+    MODULO          shift and go to state 29
 
-  ! POW             [ shift and go to state 30 ]
-  ! TIMES           [ shift and go to state 31 ]
-  ! DIVIDE          [ shift and go to state 29 ]
-  ! PLUS            [ shift and go to state 32 ]
-  ! MINUS           [ shift and go to state 33 ]
-  ! MODULO          [ shift and go to state 28 ]
+  ! POW             [ reduce using rule 13 (astExpression -> astExpression POW astExpression .) ]
+  ! TIMES           [ reduce using rule 13 (astExpression -> astExpression POW astExpression .) ]
+  ! DIVIDE          [ reduce using rule 13 (astExpression -> astExpression POW astExpression .) ]
+  ! PLUS            [ reduce using rule 13 (astExpression -> astExpression POW astExpression .) ]
+  ! MINUS           [ reduce using rule 13 (astExpression -> astExpression POW astExpression .) ]
+  ! MODULO          [ reduce using rule 13 (astExpression -> astExpression POW astExpression .) ]
 
 
 state 41
 
-    (17) astExpression -> astExpression PLUS astExpression .
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
+    (16) astExpression -> astExpression TIMES astExpression .
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
 
-    POW             reduce using rule 17 (astExpression -> astExpression PLUS astExpression .)
-    PLUS            reduce using rule 17 (astExpression -> astExpression PLUS astExpression .)
-    MINUS           reduce using rule 17 (astExpression -> astExpression PLUS astExpression .)
-    MODULO          reduce using rule 17 (astExpression -> astExpression PLUS astExpression .)
-    END             reduce using rule 17 (astExpression -> astExpression PLUS astExpression .)
-    STRING          reduce using rule 17 (astExpression -> astExpression PLUS astExpression .)
-    RPAREN          reduce using rule 17 (astExpression -> astExpression PLUS astExpression .)
-    TIMES           shift and go to state 31
-    DIVIDE          shift and go to state 29
+    POW             reduce using rule 16 (astExpression -> astExpression TIMES astExpression .)
+    TIMES           reduce using rule 16 (astExpression -> astExpression TIMES astExpression .)
+    DIVIDE          reduce using rule 16 (astExpression -> astExpression TIMES astExpression .)
+    PLUS            reduce using rule 16 (astExpression -> astExpression TIMES astExpression .)
+    MINUS           reduce using rule 16 (astExpression -> astExpression TIMES astExpression .)
+    MODULO          reduce using rule 16 (astExpression -> astExpression TIMES astExpression .)
+    END             reduce using rule 16 (astExpression -> astExpression TIMES astExpression .)
+    STRING          reduce using rule 16 (astExpression -> astExpression TIMES astExpression .)
+    RPAREN          reduce using rule 16 (astExpression -> astExpression TIMES astExpression .)
 
-  ! TIMES           [ reduce using rule 17 (astExpression -> astExpression PLUS astExpression .) ]
-  ! DIVIDE          [ reduce using rule 17 (astExpression -> astExpression PLUS astExpression .) ]
-  ! POW             [ shift and go to state 30 ]
-  ! PLUS            [ shift and go to state 32 ]
-  ! MINUS           [ shift and go to state 33 ]
-  ! MODULO          [ shift and go to state 28 ]
+  ! POW             [ shift and go to state 31 ]
+  ! TIMES           [ shift and go to state 32 ]
+  ! DIVIDE          [ shift and go to state 30 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 34 ]
+  ! MODULO          [ shift and go to state 29 ]
 
 
 state 42
 
-    (18) astExpression -> astExpression MINUS astExpression .
-    (12) astExpression -> astExpression . POW astExpression
-    (15) astExpression -> astExpression . TIMES astExpression
-    (16) astExpression -> astExpression . DIVIDE astExpression
-    (17) astExpression -> astExpression . PLUS astExpression
-    (18) astExpression -> astExpression . MINUS astExpression
-    (19) astExpression -> astExpression . MODULO astExpression
+    (18) astExpression -> astExpression PLUS astExpression .
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
 
-    POW             reduce using rule 18 (astExpression -> astExpression MINUS astExpression .)
-    PLUS            reduce using rule 18 (astExpression -> astExpression MINUS astExpression .)
-    MINUS           reduce using rule 18 (astExpression -> astExpression MINUS astExpression .)
-    MODULO          reduce using rule 18 (astExpression -> astExpression MINUS astExpression .)
-    END             reduce using rule 18 (astExpression -> astExpression MINUS astExpression .)
-    STRING          reduce using rule 18 (astExpression -> astExpression MINUS astExpression .)
-    RPAREN          reduce using rule 18 (astExpression -> astExpression MINUS astExpression .)
-    TIMES           shift and go to state 31
-    DIVIDE          shift and go to state 29
+    POW             reduce using rule 18 (astExpression -> astExpression PLUS astExpression .)
+    PLUS            reduce using rule 18 (astExpression -> astExpression PLUS astExpression .)
+    MINUS           reduce using rule 18 (astExpression -> astExpression PLUS astExpression .)
+    MODULO          reduce using rule 18 (astExpression -> astExpression PLUS astExpression .)
+    END             reduce using rule 18 (astExpression -> astExpression PLUS astExpression .)
+    STRING          reduce using rule 18 (astExpression -> astExpression PLUS astExpression .)
+    RPAREN          reduce using rule 18 (astExpression -> astExpression PLUS astExpression .)
+    TIMES           shift and go to state 32
+    DIVIDE          shift and go to state 30
 
-  ! TIMES           [ reduce using rule 18 (astExpression -> astExpression MINUS astExpression .) ]
-  ! DIVIDE          [ reduce using rule 18 (astExpression -> astExpression MINUS astExpression .) ]
-  ! POW             [ shift and go to state 30 ]
-  ! PLUS            [ shift and go to state 32 ]
-  ! MINUS           [ shift and go to state 33 ]
-  ! MODULO          [ shift and go to state 28 ]
+  ! TIMES           [ reduce using rule 18 (astExpression -> astExpression PLUS astExpression .) ]
+  ! DIVIDE          [ reduce using rule 18 (astExpression -> astExpression PLUS astExpression .) ]
+  ! POW             [ shift and go to state 31 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 34 ]
+  ! MODULO          [ shift and go to state 29 ]
 
 
 state 43
 
-    (11) astExpression -> LPAREN astExpression RPAREN .
+    (19) astExpression -> astExpression MINUS astExpression .
+    (13) astExpression -> astExpression . POW astExpression
+    (16) astExpression -> astExpression . TIMES astExpression
+    (17) astExpression -> astExpression . DIVIDE astExpression
+    (18) astExpression -> astExpression . PLUS astExpression
+    (19) astExpression -> astExpression . MINUS astExpression
+    (20) astExpression -> astExpression . MODULO astExpression
 
-    POW             reduce using rule 11 (astExpression -> LPAREN astExpression RPAREN .)
-    TIMES           reduce using rule 11 (astExpression -> LPAREN astExpression RPAREN .)
-    DIVIDE          reduce using rule 11 (astExpression -> LPAREN astExpression RPAREN .)
-    PLUS            reduce using rule 11 (astExpression -> LPAREN astExpression RPAREN .)
-    MINUS           reduce using rule 11 (astExpression -> LPAREN astExpression RPAREN .)
-    MODULO          reduce using rule 11 (astExpression -> LPAREN astExpression RPAREN .)
-    END             reduce using rule 11 (astExpression -> LPAREN astExpression RPAREN .)
-    STRING          reduce using rule 11 (astExpression -> LPAREN astExpression RPAREN .)
-    RPAREN          reduce using rule 11 (astExpression -> LPAREN astExpression RPAREN .)
+    POW             reduce using rule 19 (astExpression -> astExpression MINUS astExpression .)
+    PLUS            reduce using rule 19 (astExpression -> astExpression MINUS astExpression .)
+    MINUS           reduce using rule 19 (astExpression -> astExpression MINUS astExpression .)
+    MODULO          reduce using rule 19 (astExpression -> astExpression MINUS astExpression .)
+    END             reduce using rule 19 (astExpression -> astExpression MINUS astExpression .)
+    STRING          reduce using rule 19 (astExpression -> astExpression MINUS astExpression .)
+    RPAREN          reduce using rule 19 (astExpression -> astExpression MINUS astExpression .)
+    TIMES           shift and go to state 32
+    DIVIDE          shift and go to state 30
+
+  ! TIMES           [ reduce using rule 19 (astExpression -> astExpression MINUS astExpression .) ]
+  ! DIVIDE          [ reduce using rule 19 (astExpression -> astExpression MINUS astExpression .) ]
+  ! POW             [ shift and go to state 31 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 34 ]
+  ! MODULO          [ shift and go to state 29 ]
+
+
+state 44
+
+    (12) astExpression -> LPAREN astExpression RPAREN .
+
+    POW             reduce using rule 12 (astExpression -> LPAREN astExpression RPAREN .)
+    TIMES           reduce using rule 12 (astExpression -> LPAREN astExpression RPAREN .)
+    DIVIDE          reduce using rule 12 (astExpression -> LPAREN astExpression RPAREN .)
+    PLUS            reduce using rule 12 (astExpression -> LPAREN astExpression RPAREN .)
+    MINUS           reduce using rule 12 (astExpression -> LPAREN astExpression RPAREN .)
+    MODULO          reduce using rule 12 (astExpression -> LPAREN astExpression RPAREN .)
+    END             reduce using rule 12 (astExpression -> LPAREN astExpression RPAREN .)
+    STRING          reduce using rule 12 (astExpression -> LPAREN astExpression RPAREN .)
+    RPAREN          reduce using rule 12 (astExpression -> LPAREN astExpression RPAREN .)
 
 WARNING: 
 WARNING: Conflicts:
@@ -990,21 +1015,20 @@ WARNING: shift/reduce conflict for DECLARATION in state 11 resolved as shift
 WARNING: shift/reduce conflict for COMPUTATION in state 11 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 16 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 16 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 18 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 18 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 16 resolved as shift
 WARNING: shift/reduce conflict for STRING in state 18 resolved as shift
-WARNING: shift/reduce conflict for STRING in state 20 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 24 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 24 resolved as shift
-WARNING: shift/reduce conflict for STRING in state 24 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 19 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 19 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 19 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 21 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 25 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 25 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 25 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 26 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 26 resolved as shift
-WARNING: shift/reduce conflict for STRING in state 26 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 28 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 28 resolved as shift
-WARNING: shift/reduce conflict for STRING in state 28 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 27 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 27 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 27 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 29 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 29 resolved as shift
 WARNING: shift/reduce conflict for STRING in state 29 resolved as shift
@@ -1020,15 +1044,18 @@ WARNING: shift/reduce conflict for STRING in state 32 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 33 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 33 resolved as shift
 WARNING: shift/reduce conflict for STRING in state 33 resolved as shift
-WARNING: shift/reduce conflict for POW in state 37 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 37 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 37 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 37 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 37 resolved as shift
-WARNING: shift/reduce conflict for MODULO in state 37 resolved as shift
-WARNING: shift/reduce conflict for POW in state 39 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 39 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 39 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 39 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 39 resolved as shift
-WARNING: shift/reduce conflict for MODULO in state 39 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 34 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 34 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 34 resolved as shift
+WARNING: shift/reduce conflict for POW in state 38 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 38 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 38 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 38 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 38 resolved as shift
+WARNING: shift/reduce conflict for MODULO in state 38 resolved as shift
+WARNING: shift/reduce conflict for POW in state 40 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 40 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 40 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 40 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 40 resolved as shift
+WARNING: shift/reduce conflict for MODULO in state 40 resolved as shift

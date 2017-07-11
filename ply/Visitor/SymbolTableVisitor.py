@@ -17,6 +17,9 @@ class SymbolTableBuilder():
     def visitAstCalculator(self, ast):
         table = SimpleSymbolTable()
         for decl in ast.getDeclarations():
-            for st in decl:
-                table.insert(st.getName(),st.getExpr())
+            if isinstance(decl,ASTStatement.ASTStatement):
+                table.insert(decl.getName(),decl.getExpr())
+            else:
+                for st in decl:
+                    table.insert(st.getName(),st.getExpr())
         return table
